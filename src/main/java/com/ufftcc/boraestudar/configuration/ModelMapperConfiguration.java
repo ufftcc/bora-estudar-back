@@ -19,6 +19,8 @@ public final class ModelMapperConfiguration {
                 .setCollectionsMergeEnabled(true)
                 .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
 
+        modelMapper.addConverter(new StudyGroupUserToUserResponseBasicDto());
+
         return modelMapper;
     }
 }
