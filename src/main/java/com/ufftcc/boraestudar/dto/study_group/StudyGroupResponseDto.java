@@ -3,6 +3,7 @@ package com.ufftcc.boraestudar.dto.study_group;
 import com.ufftcc.boraestudar.dto.subject.SubjectResponseDto;
 import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public class StudyGroupResponseDto {
@@ -21,6 +22,10 @@ public class StudyGroupResponseDto {
     private List<UserResponseBasicDto> students;
 
     private Integer maxStudents;
+
+    private LocalTime meetingTime;
+
+    private Boolean isPrivate;
 
     public Long getId() {
         return id;
@@ -84,5 +89,21 @@ public class StudyGroupResponseDto {
 
     public void setMaxStudents(Integer maxStudents) {
         this.maxStudents = maxStudents;
+    }
+
+    public LocalTime getMeetingTime() {
+        return meetingTime;
+    }
+
+    public void setMeetingTime(LocalTime meetingTime) {
+        this.meetingTime = meetingTime;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }

@@ -1,7 +1,10 @@
 package com.ufftcc.boraestudar.dto.study_group;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalTime;
 
 public class StudyGroupUpdateDto {
 
@@ -12,6 +15,12 @@ public class StudyGroupUpdateDto {
     private String title;
 
     private String description;
+
+    @JsonIgnore
+    private LocalTime meetingTime;
+
+    @JsonIgnore
+    private Boolean isPrivate;
 
     public Long getUserId() {
         return userId;
@@ -37,4 +46,11 @@ public class StudyGroupUpdateDto {
         this.description = description;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
 }

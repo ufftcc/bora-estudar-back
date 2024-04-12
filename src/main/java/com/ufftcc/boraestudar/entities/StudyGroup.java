@@ -2,6 +2,7 @@ package com.ufftcc.boraestudar.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +13,11 @@ public class StudyGroup {
     public static final String COLUMN_ID = "STGR_SQ_STUDY_GROUP";
     public static final String COLUMN_TITLE = "STGR_DS_TITLE";
     public static final String COLUMN_DESCRIPTION = "STGR_DS_DESCRIPTION";
+    public static final String COLUMN_MEETING_TIME = "STGR_DT_MEETING_TIME";
     private static final String COLUMN_OWNER_ID = "STGR_USER_SQ_USER_OWNER";
     private static final String COLUMN_TUTOR = "STGR_USER_SQ_USER_TUTOR";
-    private static final String COLUMN_MAX_STUDENTS = "STGR_QT_MAX_PARTICIPANTES";
+    private static final String COLUMN_MAX_STUDENTS = "STGR_QT_MAX_STUDENTS";
+    private static final String COLUMN_VISIBILITY = "STGR_IS_PRIVATE";
     public static final String STUDY_GROUP = "studyGroup";
 
     @Id
@@ -45,6 +48,12 @@ public class StudyGroup {
 
     @Column(name = COLUMN_MAX_STUDENTS, nullable = false)
     private Integer maxStudents;
+
+    @Column(name = COLUMN_MEETING_TIME)
+    private LocalTime meetingTime;
+
+    @Column(name = COLUMN_VISIBILITY, nullable = false)
+    private Boolean isPrivate;
 
     public Long getId() {
         return id;
@@ -110,6 +119,14 @@ public class StudyGroup {
         this.maxStudents = maxStudents;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public void addStudent(StudyGroupUser student) {
         students.add(student);
     }
@@ -124,5 +141,21 @@ public class StudyGroup {
 
     public Boolean hasTutor() {
         return tutor != null;
+    }
+
+    public LocalTime getMeetingTime() {
+        return meetingTime;
+    }
+
+    public void setMeetingTime(LocalTime meetingTime) {
+        this.meetingTime = meetingTime;
+    }
+
+    public Boolean getPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 }

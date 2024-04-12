@@ -4,6 +4,7 @@ import com.ufftcc.boraestudar.entities.StudyGroup;
 import com.ufftcc.boraestudar.entities.StudyGroupUser;
 import com.ufftcc.boraestudar.entities.User;
 import com.ufftcc.boraestudar.exceptions.study_group.UserAlreadyRegisteredException;
+import com.ufftcc.boraestudar.exceptions.study_group.UserNotRegisteredException;
 import com.ufftcc.boraestudar.repositories.StudyGroupUserRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +32,15 @@ public class StudyGroupUserService {
     }
 
     public void existsByUserIdAndStudyGroupId(Long userId, Long studyGroupId) {
-        if (!repository.existsByUserIdAndStudyGroupId(userId, studyGroupId)) {
+        if (repository.existsByUserIdAndStudyGroupId(userId, studyGroupId)) {
             //TODO: criar exceção para usuário já cadastrado no grupo
-            throw new RuntimeException("Usuário não cadastrado no grupo de estudo");
+            throw new UserAlreadyRegisteredException("Este estudante ja esta cadastrado no grupo de estudos.");
         }
     }
 
     public StudyGroupUser findByUserIdAndStudyGroupId(Long studentId, Long studyGroupId) {
         //TODO: criar exceção para usuário não cadastrado no grupo
-        return repository.findByUserIdAndStudyGroupId(studentId, studyGroupId).orElseThrow(() -> new RuntimeException("Usuário não cadastrado no grupo de estudo"));
+        return repository.findByUserIdAndStudyGroupId(studentId, studyGroupId).orElseThrow(() ->
+                new UserNotRegisteredException("Usuário não cadastrado no grupo de estudo"));
     }
 }

@@ -6,26 +6,33 @@ import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalTime;
+
 public class StudyGroupCreateDto {
 
-    @NotNull(message = "Title group is required")
-    @NotBlank(message = "Title group is required")
+    @NotNull(message = "Title group can't be null")
+    @NotBlank(message = "Title can't be empty")
     private String title;
 
-    @NotNull(message = "Description group is required")
-    @NotBlank(message = "Description group is required")
+    @NotNull(message = "Description can't be null")
+    @NotBlank(message = "Description can't be empty")
     private String description;
 
-    @NotNull(message = "Owner id is required")
+    @NotNull(message = "Owner id can't be null")
     private Long ownerId;
 
     private UserResponseBasicDto tutor;
 
-    @NotNull(message = "Subject is required")
+    @NotNull(message = "Subject can't be null")
     private SubjectResponseDto subject;
 
     @NotNull(message = "Max students is required")
     private Integer maxStudents;
+
+    @NotNull(message = "Meeting time is required")
+    private LocalTime meetingTime;
+
+    private Boolean isPrivate;
 
     public String getTitle() {
         return title;
@@ -75,6 +82,22 @@ public class StudyGroupCreateDto {
         this.maxStudents = maxStudents;
     }
 
+    public LocalTime getMeetingTime() {
+        return meetingTime;
+    }
+
+    public void setMeetingTime(LocalTime meetingTime) {
+        this.meetingTime = meetingTime;
+    }
+
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+    
     @JsonIgnore
     public Boolean hasTutor() {
         return tutor != null;
