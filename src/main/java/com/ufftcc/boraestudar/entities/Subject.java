@@ -66,4 +66,13 @@ public class Subject {
         result = 31 * result + code.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Subject{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

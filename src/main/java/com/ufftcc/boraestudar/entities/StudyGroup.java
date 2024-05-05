@@ -158,4 +158,20 @@ public class StudyGroup {
     public void setPrivate(Boolean aPrivate) {
         isPrivate = aPrivate;
     }
+
+    @Override
+    public String toString() {
+        return "StudyGroup{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", ownerId=" + ownerId +
+                ", tutor=" + tutor +
+                ", subject=" + subject +
+                ", students=" + students +
+                ", maxStudents=" + maxStudents +
+                ", meetingTime=" + meetingTime +
+                ", isPrivate=" + isPrivate +
+                '}';
+    }
 }

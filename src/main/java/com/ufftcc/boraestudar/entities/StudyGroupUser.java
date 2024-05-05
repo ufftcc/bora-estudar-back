@@ -79,4 +79,13 @@ public class StudyGroupUser {
         result = 31 * result + (studyGroup != null ? studyGroup.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "StudyGroupUser{" +
+                "id=" + id +
+                ", user=" + user +
+                ", studyGroup=" + studyGroup +
+                '}';
+    }
 }
