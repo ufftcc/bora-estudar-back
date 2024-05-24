@@ -2,6 +2,8 @@ package com.ufftcc.boraestudar.dto.study_group;
 
 import com.ufftcc.boraestudar.dto.subject.SubjectResponseDto;
 import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
+import com.ufftcc.boraestudar.entities.StudyGroupWeekday;
+import com.ufftcc.boraestudar.entities.Weekday;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -24,6 +26,8 @@ public class StudyGroupResponseDto {
     private Integer maxStudents;
 
     private LocalTime meetingTime;
+
+    private List<Weekday> studyGroupWeekdays;
 
     private Boolean isPrivate;
 
@@ -97,6 +101,14 @@ public class StudyGroupResponseDto {
 
     public void setMeetingTime(LocalTime meetingTime) {
         this.meetingTime = meetingTime;
+    }
+
+    public List<Weekday> getWeekdays() {
+        return studyGroupWeekdays;
+    }
+
+    public void setWeekdays(List<Weekday> studyGroupWeekdays) {
+        this.studyGroupWeekdays = studyGroupWeekdays;
     }
 
     public Boolean getIsPrivate() {

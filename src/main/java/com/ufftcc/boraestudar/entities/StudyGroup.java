@@ -19,6 +19,7 @@ public class StudyGroup {
     private static final String COLUMN_MAX_STUDENTS = "STGR_QT_MAX_STUDENTS";
     private static final String COLUMN_VISIBILITY = "STGR_IS_PRIVATE";
     public static final String STUDY_GROUP = "studyGroup";
+    public static final String COLUMN_WEEKDAYS = "STGR_WEEKDAY";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +55,9 @@ public class StudyGroup {
 
     @Column(name = COLUMN_VISIBILITY, nullable = false)
     private Boolean isPrivate;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = STUDY_GROUP)
+    private List<StudyGroupWeekday> studyGroupWeekdays;
 
     public Long getId() {
         return id;
@@ -151,6 +155,22 @@ public class StudyGroup {
         this.meetingTime = meetingTime;
     }
 
+    public List<StudyGroupWeekday> getStudyGroupWeekdays() {
+        return studyGroupWeekdays;
+    }
+
+    public void setStudyGroupWeekdays(List<StudyGroupWeekday> meetingDays) {
+        this.studyGroupWeekdays = meetingDays;
+    }
+
+    public void addStudyGroupWeekdays(StudyGroupWeekday weekday) {
+        studyGroupWeekdays.add(weekday);
+    }
+
+    public void removeStudyGroupWeekdays(StudyGroupWeekday weekday) {
+        studyGroupWeekdays.remove(weekday);
+    }
+
     public Boolean getPrivate() {
         return isPrivate;
     }
@@ -159,19 +179,4 @@ public class StudyGroup {
         isPrivate = aPrivate;
     }
 
-    @Override
-    public String toString() {
-        return "StudyGroup{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", ownerId=" + ownerId +
-                ", tutor=" + tutor +
-                ", subject=" + subject +
-                ", students=" + students +
-                ", maxStudents=" + maxStudents +
-                ", meetingTime=" + meetingTime +
-                ", isPrivate=" + isPrivate +
-                '}';
-    }
 }

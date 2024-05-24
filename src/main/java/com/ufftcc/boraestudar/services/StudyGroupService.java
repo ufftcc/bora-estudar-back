@@ -4,9 +4,7 @@ import com.ufftcc.boraestudar.dto.mapper.StudyGroupMapper;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupCreateDto;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupUpdateDto;
 import com.ufftcc.boraestudar.dto.study_group_user.RegisterUserToGroupDto;
-import com.ufftcc.boraestudar.entities.StudyGroup;
-import com.ufftcc.boraestudar.entities.StudyGroupUser;
-import com.ufftcc.boraestudar.entities.User;
+import com.ufftcc.boraestudar.entities.*;
 import com.ufftcc.boraestudar.exceptions.InsufficientPrivilegesException;
 import com.ufftcc.boraestudar.exceptions.study_group.NoStudentsSlotsAvailableException;
 import com.ufftcc.boraestudar.exceptions.study_group.StudyGroupNotFoundException;
@@ -37,8 +35,9 @@ public class StudyGroupService {
 
     @Transactional
     public StudyGroup create(StudyGroupCreateDto dto) {
-        // TODO: verificar a seguinte regra --> um usuário pode criar vários grupos para uma mesma disciplina?
+        // TODO: verificar a seguinte regra --> um usuário pode criar vários grupos para uma mesma disciplina? --> Sim, contanto que sejam dias/horarios diferentes?
         StudyGroup studyGroup = mapper.toEntity(dto);
+        studyGroup.getStudyGroupWeekdays().forEach(studyGroupWeekday -> studyGroupWeekday.setStudyGroup(studyGroup));
         StudyGroup createdStudyGroup = repository.save(studyGroup);
 
         RegisterUserToGroupDto registerUserToGroupDto = new RegisterUserToGroupDto();
@@ -46,6 +45,7 @@ public class StudyGroupService {
         registerUserToGroupDto.setIsTutor(dto.hasTutor());
 
         registerUserToGroup(createdStudyGroup, registerUserToGroupDto);
+
         return createdStudyGroup;
     }
 

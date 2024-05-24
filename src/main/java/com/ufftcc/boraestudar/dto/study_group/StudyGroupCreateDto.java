@@ -1,13 +1,16 @@
 package com.ufftcc.boraestudar.dto.study_group;
 
+import java.time.LocalTime;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufftcc.boraestudar.dto.subject.SubjectResponseDto;
 import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
+
+import com.ufftcc.boraestudar.entities.Weekday;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalTime;
-
 public class StudyGroupCreateDto {
 
     @NotNull(message = "Title group can't be null")
@@ -31,6 +34,11 @@ public class StudyGroupCreateDto {
 
     @NotNull(message = "Meeting time is required")
     private LocalTime meetingTime;
+
+    @JsonAlias("weekdays")
+    @NotNull(message = "Weekdays is required")
+    private
+    List<Weekday> studyGroupWeekdays;
 
     private Boolean isPrivate;
 
@@ -90,6 +98,14 @@ public class StudyGroupCreateDto {
         this.meetingTime = meetingTime;
     }
 
+    public List<Weekday> getStudyGroupWeekdays() {
+        return studyGroupWeekdays;
+    }
+
+    public void setStudyGroupWeekdays(List<Weekday> studyGroupWeekdays) {
+        this.studyGroupWeekdays = studyGroupWeekdays;
+    }
+
     public Boolean getIsPrivate() {
         return isPrivate;
     }
@@ -102,4 +118,5 @@ public class StudyGroupCreateDto {
     public Boolean hasTutor() {
         return tutor != null;
     }
+
 }
