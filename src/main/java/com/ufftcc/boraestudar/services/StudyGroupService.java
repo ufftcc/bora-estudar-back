@@ -2,6 +2,7 @@ package com.ufftcc.boraestudar.services;
 
 import com.ufftcc.boraestudar.dto.mapper.StudyGroupMapper;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupCreateDto;
+import com.ufftcc.boraestudar.dto.study_group.StudyGroupFilterDto;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupUpdateDto;
 import com.ufftcc.boraestudar.dto.study_group_user.RegisterUserToGroupDto;
 import com.ufftcc.boraestudar.entities.*;
@@ -55,6 +56,15 @@ public class StudyGroupService {
             throw new StudyGroupNotFoundException(id);
         }
         return studyGroup.get();
+    }
+
+    public List<StudyGroup> findAll(Optional<StudyGroupFilterDto> filterDto) {
+        if (filterDto.isEmpty()) {
+            return findAll();
+        }
+
+        StudyGroupFilterDto dto = filterDto.get();
+        return repository.findByAttributesDinamicQuery(dto.description(), dto.title(), dto.subjectName(), dto.meetingTime(), dto.weekdays());
     }
 
     public List<StudyGroup> findAll() {

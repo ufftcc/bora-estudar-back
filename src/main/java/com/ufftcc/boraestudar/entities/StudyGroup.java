@@ -19,7 +19,6 @@ public class StudyGroup {
     private static final String COLUMN_MAX_STUDENTS = "STGR_QT_MAX_STUDENTS";
     private static final String COLUMN_VISIBILITY = "STGR_IS_PRIVATE";
     public static final String STUDY_GROUP = "studyGroup";
-    public static final String COLUMN_WEEKDAYS = "STGR_WEEKDAY";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,6 +57,8 @@ public class StudyGroup {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = STUDY_GROUP)
     private List<StudyGroupWeekday> studyGroupWeekdays;
+
+    // TODO Add modalidade do grupo de estudos (presencial, online, híbrido)
 
     public Long getId() {
         return id;

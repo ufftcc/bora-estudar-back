@@ -4,6 +4,7 @@ import com.ufftcc.boraestudar.dto.mapper.StudyGroupMapper;
 import com.ufftcc.boraestudar.dto.mapper.UserMapper;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupCreateDto;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupResponseDto;
+import com.ufftcc.boraestudar.dto.study_group.StudyGroupFilterDto;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupUpdateDto;
 import com.ufftcc.boraestudar.dto.study_group_user.RegisterUserToGroupDto;
 import com.ufftcc.boraestudar.entities.StudyGroup;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/study-groups")
@@ -35,10 +37,10 @@ public class StudyGroupController {
         return mapper.toTransferObject(createdStudyGroup, StudyGroupResponseDto.class);
     }
 
-    @GetMapping
+    @PostMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
-    public List<StudyGroupResponseDto> findAll() {
-        List<StudyGroup> studyGroups = service.findAll();
+    public List<StudyGroupResponseDto> findAll(@RequestBody Optional<StudyGroupFilterDto> dto) {
+        List<StudyGroup> studyGroups = service.findAll(dto);
         return mapper.toTransferObjectList(studyGroups, StudyGroupResponseDto.class);
     }
 

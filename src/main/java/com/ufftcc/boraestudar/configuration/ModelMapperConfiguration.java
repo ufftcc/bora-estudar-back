@@ -1,5 +1,6 @@
 package com.ufftcc.boraestudar.configuration;
 
+import com.ufftcc.boraestudar.configuration.mapper_converter.WeekdayToLong;
 import com.ufftcc.boraestudar.configuration.mapper_converter.WeekdayToStudyGroupWeekday;
 import com.ufftcc.boraestudar.configuration.mapper_converter.StudyGroupUserToUserResponseBasicDto;
 import com.ufftcc.boraestudar.configuration.mapper_converter.StudyGroupWeekdayToWeekday;
@@ -26,6 +27,7 @@ public final class ModelMapperConfiguration {
         modelMapper.addConverter(new StudyGroupUserToUserResponseBasicDto());
         modelMapper.addConverter(new StudyGroupWeekdayToWeekday());
         modelMapper.addConverter(new WeekdayToStudyGroupWeekday());
+        modelMapper.addConverter(new WeekdayToLong());
 
         return modelMapper;
     }
