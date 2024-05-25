@@ -2,6 +2,7 @@ package com.ufftcc.boraestudar.repositories;
 
 import com.ufftcc.boraestudar.entities.StudyGroup;
 import com.ufftcc.boraestudar.entities.Weekday;
+import com.ufftcc.boraestudar.enums.ModalityEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -24,8 +25,9 @@ public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long>, J
             "AND (:description is null OR sg.description LIKE %:description%) " +
             "AND (:subjectName is null OR su.name LIKE %:subjectName%) " +
             "AND (:weekdaysId is null OR w.id IN :weekdaysId)" +
+            "AND (:modality is null OR sg.modality = :modality) " +
             "AND (:meetingTime is null OR sg.meetingTime = :meetingTime) ")
     List<StudyGroup> findByAttributesDinamicQuery(String description, String title, String subjectName,
-                                                  LocalTime meetingTime, List<Long> weekdaysId);
+                                                  LocalTime meetingTime, List<Long> weekdaysId, ModalityEnum modality);
 
 }

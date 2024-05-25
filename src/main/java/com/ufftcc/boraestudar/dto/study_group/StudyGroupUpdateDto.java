@@ -1,6 +1,7 @@
 package com.ufftcc.boraestudar.dto.study_group;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ufftcc.boraestudar.enums.ModalityEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -21,6 +22,8 @@ public class StudyGroupUpdateDto {
 
     @JsonIgnore
     private Boolean isPrivate;
+
+    private ModalityEnum modality;
 
     public Long getUserId() {
         return userId;
@@ -52,5 +55,13 @@ public class StudyGroupUpdateDto {
 
     public void setIsPrivate(Boolean isPrivate) {
         this.isPrivate = isPrivate;
+    }
+
+    public ModalityEnum getModality() {
+        return modality;
+    }
+
+    public void setModality(ModalityEnum modality) {
+        this.modality = modality;
     }
 }

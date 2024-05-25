@@ -4,6 +4,7 @@ import com.ufftcc.boraestudar.dto.subject.SubjectResponseDto;
 import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
 import com.ufftcc.boraestudar.entities.StudyGroupWeekday;
 import com.ufftcc.boraestudar.entities.Weekday;
+import com.ufftcc.boraestudar.enums.ModalityEnum;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -30,6 +31,8 @@ public class StudyGroupResponseDto {
     private List<Weekday> studyGroupWeekdays;
 
     private Boolean isPrivate;
+
+    private ModalityEnum modality;
 
     public Long getId() {
         return id;
@@ -117,5 +120,13 @@ public class StudyGroupResponseDto {
 
     public void setIsPrivate(Boolean isPrivate) {
         this.isPrivate = isPrivate;
+    }
+
+    public ModalityEnum getModality() {
+        return modality;
+    }
+
+    public void setModality(ModalityEnum modality) {
+        this.modality = modality;
     }
 }

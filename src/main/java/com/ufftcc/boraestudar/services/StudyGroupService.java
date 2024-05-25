@@ -6,6 +6,7 @@ import com.ufftcc.boraestudar.dto.study_group.StudyGroupFilterDto;
 import com.ufftcc.boraestudar.dto.study_group.StudyGroupUpdateDto;
 import com.ufftcc.boraestudar.dto.study_group_user.RegisterUserToGroupDto;
 import com.ufftcc.boraestudar.entities.*;
+import com.ufftcc.boraestudar.enums.ModalityEnum;
 import com.ufftcc.boraestudar.exceptions.InsufficientPrivilegesException;
 import com.ufftcc.boraestudar.exceptions.study_group.NoStudentsSlotsAvailableException;
 import com.ufftcc.boraestudar.exceptions.study_group.StudyGroupNotFoundException;
@@ -64,7 +65,7 @@ public class StudyGroupService {
         }
 
         StudyGroupFilterDto dto = filterDto.get();
-        return repository.findByAttributesDinamicQuery(dto.description(), dto.title(), dto.subjectName(), dto.meetingTime(), dto.weekdays());
+        return repository.findByAttributesDinamicQuery(dto.description(), dto.title(), dto.subjectName(), dto.meetingTime(), dto.weekdays(), dto.modality());
     }
 
     public List<StudyGroup> findAll() {

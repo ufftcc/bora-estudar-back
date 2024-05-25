@@ -1,5 +1,6 @@
 package com.ufftcc.boraestudar.entities;
 
+import com.ufftcc.boraestudar.enums.ModalityEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;
@@ -18,6 +19,7 @@ public class StudyGroup {
     private static final String COLUMN_TUTOR = "STGR_USER_SQ_USER_TUTOR";
     private static final String COLUMN_MAX_STUDENTS = "STGR_QT_MAX_STUDENTS";
     private static final String COLUMN_VISIBILITY = "STGR_IS_PRIVATE";
+    public static final String COLUMN_MODALITY = "STGR_DS_MODALITY";
     public static final String STUDY_GROUP = "studyGroup";
 
     @Id
@@ -54,6 +56,10 @@ public class StudyGroup {
 
     @Column(name = COLUMN_VISIBILITY, nullable = false)
     private Boolean isPrivate;
+
+    @Column(name = COLUMN_MODALITY, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ModalityEnum modality;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = STUDY_GROUP)
     private List<StudyGroupWeekday> studyGroupWeekdays;
@@ -180,4 +186,11 @@ public class StudyGroup {
         isPrivate = aPrivate;
     }
 
+    public ModalityEnum getModality() {
+        return modality;
+    }
+
+    public void setModality(ModalityEnum modality) {
+        this.modality = modality;
+    }
 }

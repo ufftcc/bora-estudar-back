@@ -9,6 +9,7 @@ import com.ufftcc.boraestudar.dto.subject.SubjectResponseDto;
 import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
 
 import com.ufftcc.boraestudar.entities.Weekday;
+import com.ufftcc.boraestudar.enums.ModalityEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 public class StudyGroupCreateDto {
@@ -37,8 +38,10 @@ public class StudyGroupCreateDto {
 
     @JsonAlias("weekdays")
     @NotNull(message = "Weekdays is required")
-    private
-    List<Weekday> studyGroupWeekdays;
+    private List<Weekday> studyGroupWeekdays;
+
+    @NotNull(message = "Modality is required")
+    private ModalityEnum modality;
 
     private Boolean isPrivate;
 
@@ -117,6 +120,14 @@ public class StudyGroupCreateDto {
     @JsonIgnore
     public Boolean hasTutor() {
         return tutor != null;
+    }
+
+    public ModalityEnum getModality() {
+        return modality;
+    }
+
+    public void setModality(ModalityEnum modality) {
+        this.modality = modality;
     }
 
 }
