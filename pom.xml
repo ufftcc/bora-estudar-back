@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.6</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ufftcc</groupId>
@@ -19,6 +19,7 @@
         <json-path.version>2.9.0</json-path.version>
         <modelmapper.version>3.2.0</modelmapper.version>
         <postgresql.version>42.7.2</postgresql.version>
+        <jjwt.version>0.12.3</jjwt.version>
     </properties>
     <dependencies>
         <dependency>
@@ -32,6 +33,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <dependency>
@@ -55,6 +64,12 @@
             <artifactId>string-generator</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
