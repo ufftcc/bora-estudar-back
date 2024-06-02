@@ -2,13 +2,23 @@ spring:
   datasource:
     username: sa
     password: ''
-#    url: jdbc:h2:file:/data/testdb
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
   h2:
     console:
       enabled: true
       path: '/h2'
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: tccbackendapp@gmail.com
+    password: 'gzwq oiue ykyf xemm'
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
@@ -23,8 +33,6 @@ spring:
       data-locations: classpath:/data.sql
 security:
   enable-csrf: false
-
-
-
-
-
+  jwt:
+    secret: '======================Tcc=BoraEstudar==========================='
+    expiration-time-minutes: 1440
