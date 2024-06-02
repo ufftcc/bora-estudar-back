@@ -3,8 +3,8 @@ package com.ufftcc.boraestudar.services;
 import com.ufftcc.boraestudar.entities.StudyGroup;
 import com.ufftcc.boraestudar.entities.StudyGroupUser;
 import com.ufftcc.boraestudar.entities.User;
-import com.ufftcc.boraestudar.exceptions.study_group.UserAlreadyRegisteredException;
-import com.ufftcc.boraestudar.exceptions.study_group.UserNotRegisteredException;
+import com.ufftcc.boraestudar.exceptions.studygroup.UserAlreadyRegisteredException;
+import com.ufftcc.boraestudar.exceptions.studygroup.UserNotRegisteredException;
 import com.ufftcc.boraestudar.repositories.StudyGroupUserRepository;
 import org.springframework.stereotype.Service;
 

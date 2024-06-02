@@ -1,9 +1,9 @@
 package com.ufftcc.boraestudar.controllers;
 
-import com.ufftcc.boraestudar.dto.mapper.UserMapper;
-import com.ufftcc.boraestudar.dto.user.UserCreateDto;
-import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
-import com.ufftcc.boraestudar.dto.user.UserUpdateDto;
+import com.ufftcc.boraestudar.mappers.UserMapper;
+import com.ufftcc.boraestudar.dtos.user.UserCreateDto;
+import com.ufftcc.boraestudar.dtos.user.UserResponseBasicDto;
+import com.ufftcc.boraestudar.dtos.user.UserUpdateDto;
 import com.ufftcc.boraestudar.entities.User;
 import com.ufftcc.boraestudar.services.UserService;
 import jakarta.validation.Valid;

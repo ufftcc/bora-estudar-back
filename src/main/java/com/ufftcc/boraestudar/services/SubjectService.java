@@ -1,8 +1,8 @@
 package com.ufftcc.boraestudar.services;
 
-import com.ufftcc.boraestudar.dto.mapper.SubjectMapper;
-import com.ufftcc.boraestudar.dto.subject.SubjectUpdateDto;
-import com.ufftcc.boraestudar.dto.subject.SubjectCreateDto;
+import com.ufftcc.boraestudar.mappers.SubjectMapper;
+import com.ufftcc.boraestudar.dtos.subject.SubjectUpdateDto;
+import com.ufftcc.boraestudar.dtos.subject.SubjectCreateDto;
 import com.ufftcc.boraestudar.entities.Subject;
 import com.ufftcc.boraestudar.exceptions.subject.SubjectNotFoundException;
 import com.ufftcc.boraestudar.repositories.SubjectRepository;

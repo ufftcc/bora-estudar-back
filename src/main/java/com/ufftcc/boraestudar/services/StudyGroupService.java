@@ -1,16 +1,15 @@
 package com.ufftcc.boraestudar.services;
 
-import com.ufftcc.boraestudar.dto.mapper.StudyGroupMapper;
-import com.ufftcc.boraestudar.dto.study_group.StudyGroupCreateDto;
-import com.ufftcc.boraestudar.dto.study_group.StudyGroupFilterDto;
-import com.ufftcc.boraestudar.dto.study_group.StudyGroupUpdateDto;
-import com.ufftcc.boraestudar.dto.study_group_user.RegisterUserToGroupDto;
+import com.ufftcc.boraestudar.mappers.StudyGroupMapper;
+import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupCreateDto;
+import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupFilterDto;
+import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupUpdateDto;
+import com.ufftcc.boraestudar.dtos.studygroupuser.RegisterUserToGroupDto;
 import com.ufftcc.boraestudar.entities.*;
-import com.ufftcc.boraestudar.enums.ModalityEnum;
-import com.ufftcc.boraestudar.exceptions.InsufficientPrivilegesException;
-import com.ufftcc.boraestudar.exceptions.study_group.NoStudentsSlotsAvailableException;
-import com.ufftcc.boraestudar.exceptions.study_group.StudyGroupNotFoundException;
-import com.ufftcc.boraestudar.exceptions.study_group.TutorAlreadyRegisteredException;
+import com.ufftcc.boraestudar.exceptions.studygroup.InsufficientPrivilegesException;
+import com.ufftcc.boraestudar.exceptions.studygroup.NoStudentsSlotsAvailableException;
+import com.ufftcc.boraestudar.exceptions.studygroup.StudyGroupNotFoundException;
+import com.ufftcc.boraestudar.exceptions.studygroup.TutorAlreadyRegisteredException;
 import com.ufftcc.boraestudar.repositories.StudyGroupRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
