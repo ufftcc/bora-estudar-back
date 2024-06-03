@@ -6,6 +6,7 @@ import com.ufftcc.boraestudar.repositories.EmailVerificationTokenRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,5 +23,12 @@ public class EmailVerificationTokenService {
         token.setUser(user);
         token.setValidity(LocalDateTime.now().plusDays(1));
         return tokenRepository.save(token);
+    }
+
+    public EmailVerificationToken findByToken(String token) {
+        return tokenRepository
+                    .findByToken(token)
+                    // TODO: Use a custom exception to redirect to fail page
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
     }
 }

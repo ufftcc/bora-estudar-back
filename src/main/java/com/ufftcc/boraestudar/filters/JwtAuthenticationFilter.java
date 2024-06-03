@@ -1,7 +1,6 @@
 package com.ufftcc.boraestudar.filters;
 
 import com.ufftcc.boraestudar.services.JwtService;
-import com.ufftcc.boraestudar.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,15 +25,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final HandlerExceptionResolver handlerExceptionResolver;
     private final JwtService jwtService;
-    private final UserService userService;
-
+    private final UserDetailsService userDetailsService;
     private final Boolean csrfEnabled;
 
     public JwtAuthenticationFilter(HandlerExceptionResolver handlerExceptionResolver, JwtService jwtService,
-                                   UserService userService, @Value("${security.enable-csrf}") Boolean csrfEnabled) {
+                                   UserDetailsService userDetailsService, @Value("${security.enable-csrf}") Boolean csrfEnabled) {
         this.handlerExceptionResolver = handlerExceptionResolver;
         this.jwtService = jwtService;
-        this.userService = userService;
+        this.userDetailsService = userDetailsService;
         this.csrfEnabled = csrfEnabled;
     }
 
@@ -60,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if (username != null && authentication == null) {
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 if (jwtService.isTokenValid(token, userDetails.getUsername())) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
