@@ -1,8 +1,8 @@
 package com.ufftcc.boraestudar.configurations;
 
-import com.ufftcc.boraestudar.filters.JwtAuthenticationFilter;
+import com.ufftcc.boraestudar.security.AuthEntryPointJwt;
+import com.ufftcc.boraestudar.security.JwtAuthenticationFilter;
 import com.ufftcc.boraestudar.services.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,8 +17,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -26,13 +28,13 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final Boolean csrfEnabled;
+    private final AuthenticationEntryPoint unauthorizedHandler;
 
     public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter,
-                          @Value("${security.enable-csrf}") Boolean csrfEnabled) {
+                          AuthEntryPointJwt unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.csrfEnabled = csrfEnabled;
+        this.unauthorizedHandler = unauthorizedHandler;
     }
 
     @Bean
@@ -47,7 +49,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-    // TODO Lembrar de mudar para BCryptPasswordEncoder após os testes
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -56,20 +58,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // Disable CSRF if it is local environment
-        if (!csrfEnabled) {
-            http.csrf(AbstractHttpConfigurer::disable);
-            http.cors(AbstractHttpConfigurer::disable);
-        }
-
         http
+            .csrf(AbstractHttpConfigurer::disable)
+            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
-                auth.requestMatchers("/confirm").permitAll()
-                    .requestMatchers("/signing").permitAll()
-                    .requestMatchers("/signup").permitAll()
+                auth.requestMatchers("/confirm","/signin", "/signup", "/signout").permitAll()
                     .requestMatchers("/h2/**").permitAll()
-                    .anyRequest().authenticated());
+                    .anyRequest().authenticated()
+            );
+
 
         http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http.authenticationProvider(authenticationProvider());

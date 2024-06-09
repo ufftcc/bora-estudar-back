@@ -11,7 +11,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: tccbackendapp@gmail.com
+    username: bora-estudar-app@gmail.com
     password: 'gzwq oiue ykyf xemm'
     properties:
       mail:
@@ -32,7 +32,10 @@ spring:
     init:
       data-locations: classpath:/data.sql
 security:
-  enable-csrf: false
   jwt:
     secret: '======================Tcc=BoraEstudar==========================='
-    expiration-time-minutes: 1440
+    expiration-time: 1440
+    jwtCookieName: 'access_token'
+  email:
+    token:
+      expiration-time-minutes: 60

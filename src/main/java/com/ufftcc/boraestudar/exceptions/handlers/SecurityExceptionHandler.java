@@ -1,6 +1,7 @@
 package com.ufftcc.boraestudar.exceptions.handlers;
 
 import com.ufftcc.boraestudar.exceptions.JsonMessage;
+import com.ufftcc.boraestudar.exceptions.security.TokenEmailNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
@@ -51,5 +52,12 @@ public class SecurityExceptionHandler {
     public JsonMessage handleExpiredJwtException(ExpiredJwtException exception) {
         exception.printStackTrace();
         return new JsonMessage("The JWT token has expired");
+    }
+
+    @ExceptionHandler({TokenEmailNotFoundException.class})
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public JsonMessage handleTokenEmailNotFoundException(TokenEmailNotFoundException exception) {
+        exception.printStackTrace();
+        return new JsonMessage(exception.getMessage());
     }
 }
