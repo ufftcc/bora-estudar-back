@@ -1,12 +1,11 @@
 package com.ufftcc.boraestudar.controllers;
 
-import com.ufftcc.boraestudar.dto.mapper.StudyGroupMapper;
-import com.ufftcc.boraestudar.dto.mapper.UserMapper;
-import com.ufftcc.boraestudar.dto.study_group.StudyGroupCreateDto;
-import com.ufftcc.boraestudar.dto.study_group.StudyGroupResponseDto;
-import com.ufftcc.boraestudar.dto.study_group.StudyGroupFilterDto;
-import com.ufftcc.boraestudar.dto.study_group.StudyGroupUpdateDto;
-import com.ufftcc.boraestudar.dto.study_group_user.RegisterUserToGroupDto;
+import com.ufftcc.boraestudar.mappers.StudyGroupMapper;
+import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupCreateDto;
+import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupResponseDto;
+import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupFilterDto;
+import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupUpdateDto;
+import com.ufftcc.boraestudar.dtos.studygroupuser.RegisterUserToGroupDto;
 import com.ufftcc.boraestudar.entities.StudyGroup;
 import com.ufftcc.boraestudar.services.StudyGroupService;
 import jakarta.validation.Valid;
@@ -22,12 +21,10 @@ public class StudyGroupController {
 
     private final StudyGroupService service;
     private final StudyGroupMapper mapper;
-    private final UserMapper userMapper;
 
-    public StudyGroupController(StudyGroupService service, StudyGroupMapper mapper, UserMapper userMapper) {
+    public StudyGroupController(StudyGroupService service, StudyGroupMapper mapper) {
         this.service = service;
         this.mapper = mapper;
-        this.userMapper = userMapper;
     }
 
     @PostMapping

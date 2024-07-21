@@ -1,12 +1,10 @@
 package com.ufftcc.boraestudar.controllers;
 
-import com.ufftcc.boraestudar.dto.mapper.UserMapper;
-import com.ufftcc.boraestudar.dto.user.UserCreateDto;
-import com.ufftcc.boraestudar.dto.user.UserResponseBasicDto;
-import com.ufftcc.boraestudar.dto.user.UserUpdateDto;
+import com.ufftcc.boraestudar.mappers.UserMapper;
+import com.ufftcc.boraestudar.dtos.user.UserResponseBasicDto;
+import com.ufftcc.boraestudar.dtos.user.UserUpdateDto;
 import com.ufftcc.boraestudar.entities.User;
 import com.ufftcc.boraestudar.services.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,18 +22,11 @@ public class UserController {
         this.mapper = mapper;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponseBasicDto save(@Valid @RequestBody UserCreateDto dto) {
-        User createdUser = service.create(dto);
-        return mapper.toTransferObject(createdUser, UserResponseBasicDto.class);
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserResponseBasicDto> findAll() {
-        List<User> usuarios = service.findAll();
-        return mapper.toTransferObjectList(usuarios, UserResponseBasicDto.class);
+        List<User> users = service.findAll();
+        return mapper.toTransferObjectList(users, UserResponseBasicDto.class);
     }
 
     @GetMapping("/{id}")

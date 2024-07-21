@@ -1,6 +1,12 @@
 package com.ufftcc.boraestudar.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = User.TABLE_NAME)
@@ -11,6 +17,7 @@ public class User {
     public static final String COLUMN_NAME = "APUS_DS_NAME";
     public static final String COLUMN_EMAIL ="APUS_DS_EMAIL";
     public static final String COLUMN_PASSWORD = "APUS_DS_PASSWORD";
+    public static final String COLUMN_IS_ENABLED = "APUS_IS_ENABLED";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +32,9 @@ public class User {
 
     @Column(name = COLUMN_PASSWORD, nullable = false)
     private String password;
+
+    @Column(name = COLUMN_IS_ENABLED, nullable = false)
+    private Boolean isEnabled = false;
 
     public User() {
     }
@@ -59,6 +69,18 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    public Boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     @Override

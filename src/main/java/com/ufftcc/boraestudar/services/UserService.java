@@ -1,8 +1,6 @@
 package com.ufftcc.boraestudar.services;
 
-import com.ufftcc.boraestudar.dto.mapper.UserMapper;
-import com.ufftcc.boraestudar.dto.user.UserCreateDto;
-import com.ufftcc.boraestudar.dto.user.UserUpdateDto;
+import com.ufftcc.boraestudar.dtos.user.UserUpdateDto;
 import com.ufftcc.boraestudar.entities.User;
 import com.ufftcc.boraestudar.exceptions.user.UserNotFoundException;
 import com.ufftcc.boraestudar.repositories.UserRepository;
@@ -15,16 +13,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository repository;
-    private final UserMapper mapper;
 
-    public UserService(UserRepository repository, UserMapper mapper) {
+    public UserService(UserRepository repository) {
         this.repository = repository;
-        this.mapper = mapper;
-    }
-
-    public User create(UserCreateDto dto) {
-        User user = mapper.toEntity(dto);
-        return repository.save(user);
     }
 
     public User findById(Long id) {
@@ -41,7 +32,7 @@ public class UserService {
 
     public User updateById(Long id, UserUpdateDto dto) {
         Optional<User> userFound = repository.findById(id);
-        if (userFound.isEmpty()){
+        if (userFound.isEmpty()) {
             throw new UserNotFoundException(id);
         }
 

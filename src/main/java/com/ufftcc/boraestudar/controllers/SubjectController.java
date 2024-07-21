@@ -1,9 +1,9 @@
 package com.ufftcc.boraestudar.controllers;
 
-import com.ufftcc.boraestudar.dto.mapper.SubjectMapper;
-import com.ufftcc.boraestudar.dto.subject.SubjectCreateDto;
-import com.ufftcc.boraestudar.dto.subject.SubjectResponseDto;
-import com.ufftcc.boraestudar.dto.subject.SubjectUpdateDto;
+import com.ufftcc.boraestudar.mappers.SubjectMapper;
+import com.ufftcc.boraestudar.dtos.subject.SubjectCreateDto;
+import com.ufftcc.boraestudar.dtos.subject.SubjectResponseDto;
+import com.ufftcc.boraestudar.dtos.subject.SubjectUpdateDto;
 import com.ufftcc.boraestudar.entities.Subject;
 import com.ufftcc.boraestudar.services.SubjectService;
 import jakarta.validation.Valid;
@@ -17,7 +17,7 @@ import java.util.List;
 public class SubjectController {
 
     private final SubjectService service;
-    private SubjectMapper mapper;
+    private final SubjectMapper mapper;
 
     SubjectController(SubjectService service, SubjectMapper mapper) {
         this.service = service;

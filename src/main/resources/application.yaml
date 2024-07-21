@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: bora-estudar-back
+  profiles:
+    active: local
+  web:
+    resources:
+      add-mappings: true
+#  mvc:
+#    servlet:
+#      path: '/'
