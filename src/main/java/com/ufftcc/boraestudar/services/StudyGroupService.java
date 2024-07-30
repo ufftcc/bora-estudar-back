@@ -4,12 +4,10 @@ import com.ufftcc.boraestudar.mappers.StudyGroupMapper;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupCreateDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupFilterDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupUpdateDto;
-import com.ufftcc.boraestudar.dtos.studygroupuser.RegisterUserToGroupDto;
 import com.ufftcc.boraestudar.entities.*;
 import com.ufftcc.boraestudar.exceptions.studygroup.InsufficientPrivilegesException;
 import com.ufftcc.boraestudar.exceptions.studygroup.NoStudentsSlotsAvailableException;
 import com.ufftcc.boraestudar.exceptions.studygroup.StudyGroupNotFoundException;
-import com.ufftcc.boraestudar.exceptions.studygroup.TutorAlreadyRegisteredException;
 import com.ufftcc.boraestudar.repositories.StudyGroupRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -41,11 +39,7 @@ public class StudyGroupService {
         studyGroup.getStudyGroupWeekdays().forEach(studyGroupWeekday -> studyGroupWeekday.setStudyGroup(studyGroup));
         StudyGroup createdStudyGroup = repository.save(studyGroup);
 
-        RegisterUserToGroupDto registerUserToGroupDto = new RegisterUserToGroupDto();
-        registerUserToGroupDto.setUserId(dto.getOwnerId());
-        registerUserToGroupDto.setIsTutor(dto.hasTutor());
-
-        registerUserToGroup(createdStudyGroup, registerUserToGroupDto);
+        registerUserToGroup(createdStudyGroup.getId(), dto.getOwnerId());
 
         return createdStudyGroup;
     }
@@ -95,35 +89,14 @@ public class StudyGroupService {
         repository.deleteById(id);
     }
 
-    public void registerUserToGroup(Long groupStudyId, RegisterUserToGroupDto dto) {
+    public void registerUserToGroup(Long groupStudyId, Long studentId) {
         StudyGroup studyGroup = findById(groupStudyId);
-        registerUserToGroup(studyGroup, dto);
-    }
 
-    public void registerUserToGroup(StudyGroup studyGroup, RegisterUserToGroupDto dto) {
-        if(dto.getIsTutor()){
-            registerTutor(dto, studyGroup);
-            return;
-        }
-        registerStudent(dto, studyGroup);
-    }
-
-    private void registerTutor(RegisterUserToGroupDto dto, StudyGroup studyGroup) {
-        if(dto.getIsTutor() && studyGroup.getTutor() != null) {
-            throw new TutorAlreadyRegisteredException("Nao ha vaga de tutor disponivel");
-        } else {
-            User user = userService.findById(dto.getUserId());
-            studyGroup.setTutor(user);
-            repository.save(studyGroup);
-        }
-    }
-
-    private void registerStudent(RegisterUserToGroupDto dto, StudyGroup studyGroup) {
         if (!studyGroup.hasStudentSlotsAvailable()) {
             throw new NoStudentsSlotsAvailableException("Nao ha vaga para estudantes no Grupo de estudo " + studyGroup.getId());
         }
-        User user = userService.findById(dto.getUserId());
-        studyGroupUserService.registerStudentToGroup(studyGroup, user);
+        User user = userService.findById(studentId);
+        studyGroupUserService.registerUserToGroup(studyGroup, user);
     }
 
     @Transactional
@@ -133,7 +106,7 @@ public class StudyGroupService {
         studyGroupUserService.removeStudentFromGroup(studyGroupUser);
 
         if (studyGroup.getOwnerId().equals(studyGroupUser.getUser().getId())) {
-            setNewOwnerToGroup(studyGroup, true);
+            setNewOwnerToGroup(studyGroup);
         }
 
         studyGroup.removeStudent(studyGroupUser);
@@ -142,35 +115,16 @@ public class StudyGroupService {
         tryDeleteStudyGroup(studyGroup);
     }
 
-    public void removeTutorFromGroup(Long studyGroupId, Long tutorId) {
-        StudyGroup studyGroup = findById(studyGroupId);
-
-        if(!studyGroup.getTutor().getId().equals(tutorId)) {
-            //TODO criar exceção para tutor não ser o tutor do grupo
-            throw new RuntimeException("Usuario nao é tutor do grupo de estudo " + studyGroupId);
-        }
-
-        if (studyGroup.getOwnerId().equals(tutorId)) {
-            setNewOwnerToGroup(studyGroup, false);
-        }
-
-        studyGroup.setTutor(null);
-        repository.save(studyGroup);
-        tryDeleteStudyGroup(studyGroup);
-    }
-
-    private void setNewOwnerToGroup(StudyGroup studyGroup, Boolean useTutor) {
+    private void setNewOwnerToGroup(StudyGroup studyGroup) {
         Long newOwnerId = null;
-        if (useTutor && studyGroup.hasTutor()) {
-            newOwnerId = studyGroup.getTutor().getId();
-        } else if (!studyGroup.getStudents().isEmpty()) {
+        if (!studyGroup.getStudents().isEmpty()) {
             newOwnerId = studyGroup.getStudents().get(0).getUser().getId();
         }
         studyGroup.setOwnerId(newOwnerId);
     }
 
     private void tryDeleteStudyGroup(StudyGroup studyGroup) {
-        if (studyGroup.getStudents().size() == 0 && !studyGroup.hasTutor()) {
+        if (studyGroup.getStudents().size() == 0) {
             repository.delete(studyGroup);
         }
     }

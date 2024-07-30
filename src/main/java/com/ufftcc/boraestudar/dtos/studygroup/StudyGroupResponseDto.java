@@ -1,5 +1,6 @@
 package com.ufftcc.boraestudar.dtos.studygroup;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ufftcc.boraestudar.dtos.subject.SubjectResponseDto;
 import com.ufftcc.boraestudar.dtos.user.UserResponseBasicDto;
@@ -19,8 +20,6 @@ public class StudyGroupResponseDto {
 
     private Long ownerId;
 
-    private UserResponseBasicDto tutor;
-
     private SubjectResponseDto subject;
 
     private List<UserResponseBasicDto> students;
@@ -31,6 +30,7 @@ public class StudyGroupResponseDto {
 
     private List<Weekday> studyGroupWeekdays;
 
+    @JsonIgnore
     private Boolean isPrivate;
 
     private ModalityEnum modality;
@@ -65,14 +65,6 @@ public class StudyGroupResponseDto {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public UserResponseBasicDto getTutor() {
-        return tutor;
-    }
-
-    public void setTutor(UserResponseBasicDto tutor) {
-        this.tutor = tutor;
     }
 
     public SubjectResponseDto getSubject() {
