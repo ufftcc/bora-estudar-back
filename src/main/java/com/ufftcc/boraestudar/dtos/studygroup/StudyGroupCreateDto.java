@@ -25,8 +25,6 @@ public class StudyGroupCreateDto {
     @NotNull(message = "Owner id can't be null")
     private Long ownerId;
 
-    private UserResponseBasicDto tutor;
-
     @NotNull(message = "Subject can't be null")
     private SubjectResponseDto subject;
 
@@ -43,6 +41,7 @@ public class StudyGroupCreateDto {
     @NotNull(message = "Modality is required")
     private ModalityEnum modality;
 
+    @JsonIgnore
     private Boolean isPrivate;
 
     public String getTitle() {
@@ -67,14 +66,6 @@ public class StudyGroupCreateDto {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public UserResponseBasicDto getTutor() {
-        return tutor;
-    }
-
-    public void setTutor(UserResponseBasicDto tutor) {
-        this.tutor = tutor;
     }
 
     public SubjectResponseDto getSubject() {
@@ -115,11 +106,6 @@ public class StudyGroupCreateDto {
 
     public void setIsPrivate(Boolean isPrivate) {
         this.isPrivate = isPrivate;
-    }
-    
-    @JsonIgnore
-    public Boolean hasTutor() {
-        return tutor != null;
     }
 
     public ModalityEnum getModality() {

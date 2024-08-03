@@ -17,14 +17,13 @@ public class StudyGroupUserService {
         this.repository = repository;
     }
 
-    public void registerStudentToGroup(StudyGroup studyGroup, User user) {
+    public void registerUserToGroup(StudyGroup studyGroup, User user) {
         existsByUserIdAndStudyGroupId(user.getId(), studyGroup.getId());
         StudyGroupUser studyGroupUser = new StudyGroupUser();
         studyGroupUser.setUser(user);
         studyGroupUser.setStudyGroup(studyGroup);
         studyGroupUser = repository.save(studyGroupUser);
         studyGroup.addStudent(studyGroupUser);
-        //TODO fazer função .add em StudyGroup
     }
 
     public void removeStudentFromGroup(StudyGroupUser studyGroupUser) {

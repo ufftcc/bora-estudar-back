@@ -5,7 +5,6 @@ import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupCreateDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupResponseDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupFilterDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupUpdateDto;
-import com.ufftcc.boraestudar.dtos.studygroupuser.RegisterUserToGroupDto;
 import com.ufftcc.boraestudar.entities.StudyGroup;
 import com.ufftcc.boraestudar.services.StudyGroupService;
 import jakarta.validation.Valid;
@@ -55,20 +54,15 @@ public class StudyGroupController {
         return mapper.toTransferObject(updatedUser, StudyGroupResponseDto.class);
     }
 
-    @PostMapping("/{groupId}/students/join")
+    @PostMapping("/{groupId}/students/{studentId}/join")
     @ResponseStatus(HttpStatus.OK)
-    public void registerUserToGroup(@PathVariable Long groupId, @RequestBody RegisterUserToGroupDto dto) {
-        service.registerUserToGroup(groupId, dto);
+    public void registerUserToGroup(@PathVariable Long groupId, @PathVariable Long studentId) {
+        service.registerUserToGroup(groupId, studentId);
     }
 
     @PostMapping("/{groupId}/students/{studentId}/leave")
     public void removeStudentFromGroup(@PathVariable Long groupId, @PathVariable Long studentId) {
         service.removeStudentFromGroup(groupId, studentId);
-    }
-
-    @PostMapping("/{groupId}/tutors/{tutorId}/leave")
-    public void removeTutorFromGroup(@PathVariable Long groupId, @PathVariable Long tutorId) {
-        service.removeTutorFromGroup(groupId, tutorId);
     }
 
 //    @DeleteMapping("/{id}")

@@ -16,7 +16,6 @@ public class StudyGroup {
     public static final String COLUMN_DESCRIPTION = "STGR_DS_DESCRIPTION";
     public static final String COLUMN_MEETING_TIME = "STGR_DT_MEETING_TIME";
     private static final String COLUMN_OWNER_ID = "STGR_USER_SQ_USER_OWNER";
-    private static final String COLUMN_TUTOR = "STGR_USER_SQ_USER_TUTOR";
     private static final String COLUMN_MAX_STUDENTS = "STGR_QT_MAX_STUDENTS";
     private static final String COLUMN_VISIBILITY = "STGR_IS_PRIVATE";
     public static final String COLUMN_MODALITY = "STGR_DS_MODALITY";
@@ -37,10 +36,6 @@ public class StudyGroup {
     private Long ownerId;
 
     @ManyToOne
-    @JoinColumn(name = COLUMN_TUTOR, referencedColumnName = User.COLUMN_ID)
-    private User tutor;
-
-    @ManyToOne
     @JoinColumn(name = Subject.COLUMN_ID, referencedColumnName = Subject.COLUMN_ID,
             nullable = false)
     private Subject subject;
@@ -54,7 +49,7 @@ public class StudyGroup {
     @Column(name = COLUMN_MEETING_TIME)
     private LocalTime meetingTime;
 
-    @Column(name = COLUMN_VISIBILITY, nullable = false)
+    @Column(name = COLUMN_VISIBILITY, nullable = true)
     private Boolean isPrivate;
 
     @Column(name = COLUMN_MODALITY, nullable = false)
@@ -96,14 +91,6 @@ public class StudyGroup {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
-    }
-
-    public User getTutor() {
-        return tutor;
-    }
-
-    public void setTutor(User tutor) {
-        this.tutor = tutor;
     }
 
     public Long getOwnerId() {
@@ -148,10 +135,6 @@ public class StudyGroup {
 
     public Boolean hasStudentSlotsAvailable() {
         return students.size() < maxStudents;
-    }
-
-    public Boolean hasTutor() {
-        return tutor != null;
     }
 
     public LocalTime getMeetingTime() {
