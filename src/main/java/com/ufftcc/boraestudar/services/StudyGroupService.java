@@ -58,7 +58,7 @@ public class StudyGroupService {
         }
 
         StudyGroupFilterDto dto = filterDto.get();
-        return repository.findByAttributesDinamicQuery(dto.description(), dto.title(), dto.subjectName(), dto.meetingTime(), dto.weekdays(), dto.modality());
+        return repository.findByAttributesDinamicQuery(dto.description(), dto.title(), dto.subjectName(), dto.meetingTime(), dto.weekdays(), dto.modality(), dto.studentId());
     }
 
     public List<StudyGroup> findAll() {

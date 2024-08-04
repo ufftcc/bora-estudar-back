@@ -21,13 +21,15 @@ public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long>, J
             "INNER JOIN sg.studyGroupWeekdays sgw " +
             "INNER join sgw.weekday w " +
             "INNER join sg.subject su " +
+            "INNER join sg.students st " +
             "WHERE (:title is null OR sg.title = :title) " +
             "AND (:description is null OR sg.description LIKE %:description%) " +
             "AND (:subjectName is null OR su.name LIKE %:subjectName%) " +
             "AND (:weekdaysId is null OR w.id IN :weekdaysId)" +
             "AND (:modality is null OR sg.modality = :modality) " +
-            "AND (:meetingTime is null OR sg.meetingTime = :meetingTime) ")
+            "AND (:meetingTime is null OR sg.meetingTime = :meetingTime) " +
+            "AND (:studentId is null OR st.user.id = :studentId) ")
     List<StudyGroup> findByAttributesDinamicQuery(String description, String title, String subjectName,
-                                                  LocalTime meetingTime, List<Long> weekdaysId, ModalityEnum modality);
+                                                  LocalTime meetingTime, List<Long> weekdaysId, ModalityEnum modality, Long studentId);
 
 }
