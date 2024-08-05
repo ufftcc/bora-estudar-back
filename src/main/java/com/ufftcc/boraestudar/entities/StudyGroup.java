@@ -46,7 +46,7 @@ public class StudyGroup {
     @Column(name = COLUMN_MAX_STUDENTS, nullable = false)
     private Integer maxStudents;
 
-    @Column(name = COLUMN_MEETING_TIME)
+    @Column(name = COLUMN_MEETING_TIME, nullable = false)
     private LocalTime meetingTime;
 
     @Column(name = COLUMN_VISIBILITY, nullable = true)
@@ -161,6 +161,10 @@ public class StudyGroup {
         studyGroupWeekdays.remove(weekday);
     }
 
+    public void cleanStudyGroupWeekdays() {
+        studyGroupWeekdays.clear();
+    }
+
     public Boolean getPrivate() {
         return isPrivate;
     }
@@ -175,5 +179,31 @@ public class StudyGroup {
 
     public void setModality(ModalityEnum modality) {
         this.modality = modality;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StudyGroup that = (StudyGroup) o;
+
+        if (!id.equals(that.id)) return false;
+        if (!ownerId.equals(that.ownerId)) return false;
+        if (!subject.equals(that.subject)) return false;
+        if (!students.equals(that.students)) return false;
+        if (!meetingTime.equals(that.meetingTime)) return false;
+        return studyGroupWeekdays.equals(that.studyGroupWeekdays);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + ownerId.hashCode();
+        result = 31 * result + subject.hashCode();
+        result = 31 * result + students.hashCode();
+        result = 31 * result + meetingTime.hashCode();
+        result = 31 * result + studyGroupWeekdays.hashCode();
+        return result;
     }
 }
