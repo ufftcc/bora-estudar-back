@@ -75,7 +75,8 @@ public class StudyGroupService {
         }
 
         StudyGroup studyGroup = mapper.toEntity(dto);
-        String[] propriedadesIgnoradas = {"title", "description"};
+        studyGroup.getStudyGroupWeekdays().forEach(studyGroupWeekday -> studyGroupWeekday.setStudyGroup(studyGroup));
+        String[] propriedadesIgnoradas = {"title", "description", "meetingTime", "studyGroupWeekdays"};
         BeanUtils.copyProperties(grupoEstudoEncontrado, studyGroup, propriedadesIgnoradas);
 
         return repository.save(studyGroup);

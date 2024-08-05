@@ -1,11 +1,14 @@
 package com.ufftcc.boraestudar.dtos.studygroup;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ufftcc.boraestudar.entities.StudyGroupWeekday;
+import com.ufftcc.boraestudar.entities.Weekday;
 import com.ufftcc.boraestudar.enums.ModalityEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalTime;
+import java.util.List;
 
 public class StudyGroupUpdateDto {
 
@@ -17,13 +20,17 @@ public class StudyGroupUpdateDto {
 
     private String description;
 
-    @JsonIgnore
     private LocalTime meetingTime;
 
     @JsonIgnore
     private Boolean isPrivate;
 
+    @JsonIgnore
     private ModalityEnum modality;
+
+    @JsonAlias("weekdays")
+    @NotNull(message = "Weekdays is required")
+    private List<Weekday> studyGroupWeekdays;
 
     public Long getUserId() {
         return userId;
@@ -49,6 +56,14 @@ public class StudyGroupUpdateDto {
         this.description = description;
     }
 
+    public LocalTime getMeetingTime() {
+        return meetingTime;
+    }
+
+    public void setMeetingTime(LocalTime meetingTime) {
+        this.meetingTime = meetingTime;
+    }
+
     public Boolean getIsPrivate() {
         return isPrivate;
     }
@@ -63,5 +78,13 @@ public class StudyGroupUpdateDto {
 
     public void setModality(ModalityEnum modality) {
         this.modality = modality;
+    }
+
+    public List<Weekday> getStudyGroupWeekdays() {
+        return studyGroupWeekdays;
+    }
+
+    public void setStudyGroupWeekdays(List<Weekday> studyGroupWeekdays) {
+        this.studyGroupWeekdays = studyGroupWeekdays;
     }
 }
