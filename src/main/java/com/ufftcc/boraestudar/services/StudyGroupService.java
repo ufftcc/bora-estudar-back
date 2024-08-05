@@ -10,11 +10,11 @@ import com.ufftcc.boraestudar.exceptions.studygroup.NoStudentsSlotsAvailableExce
 import com.ufftcc.boraestudar.exceptions.studygroup.StudyGroupNotFoundException;
 import com.ufftcc.boraestudar.repositories.StudyGroupRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudyGroupService {
@@ -75,11 +75,46 @@ public class StudyGroupService {
         }
 
         StudyGroup studyGroup = mapper.toEntity(dto);
-        studyGroup.getStudyGroupWeekdays().forEach(studyGroupWeekday -> studyGroupWeekday.setStudyGroup(studyGroup));
-        String[] propriedadesIgnoradas = {"title", "description", "meetingTime", "studyGroupWeekdays"};
-        BeanUtils.copyProperties(grupoEstudoEncontrado, studyGroup, propriedadesIgnoradas);
+        studyGroup = copyProperties(grupoEstudoEncontrado, studyGroup);
 
         return repository.save(studyGroup);
+    }
+
+    private StudyGroup copyProperties(StudyGroup persistedStudyGroup, StudyGroup receivedStudyGroup) {
+        if (receivedStudyGroup.getTitle() != null) {
+            persistedStudyGroup.setTitle(receivedStudyGroup.getTitle());
+        }
+
+        if (receivedStudyGroup.getDescription() != null) {
+            persistedStudyGroup.setDescription(receivedStudyGroup.getDescription());
+        }
+
+        if (receivedStudyGroup.getMeetingTime() != null) {
+            persistedStudyGroup.setMeetingTime(receivedStudyGroup.getMeetingTime());
+        }
+
+        if (receivedStudyGroup.getStudyGroupWeekdays() != null && !receivedStudyGroup.getStudyGroupWeekdays().isEmpty()) {
+            List<Weekday> receivedWeekDays = receivedStudyGroup.getStudyGroupWeekdays().stream()
+                    .map(studyGroupWeekday -> studyGroupWeekday.getWeekday())
+                    .collect(Collectors.toList());
+
+            persistedStudyGroup.getStudyGroupWeekdays()
+                    .removeIf(studyGroupWeekday -> !receivedWeekDays.contains(studyGroupWeekday.getWeekday()));
+
+            List<Weekday> persistedWeekDays = persistedStudyGroup.getStudyGroupWeekdays().stream()
+                    .map(studyGroupWeekday -> studyGroupWeekday.getWeekday())
+                    .collect(Collectors.toList());
+
+            receivedStudyGroup.getStudyGroupWeekdays()
+                    .removeIf(studyGroupWeekday -> persistedWeekDays.contains(studyGroupWeekday.getWeekday()));
+
+            receivedStudyGroup.getStudyGroupWeekdays().forEach(received -> {
+                received.setStudyGroup(persistedStudyGroup);
+                persistedStudyGroup.addStudyGroupWeekdays(received);
+            });
+        }
+
+        return persistedStudyGroup;
     }
 
     public Boolean isOwner(Long groupId, Long ownerId) {

@@ -66,4 +66,21 @@ public class StudyGroupWeekday {
         this.weekday = weekDay;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StudyGroupWeekday that = (StudyGroupWeekday) o;
+
+        if (!studyGroup.equals(that.studyGroup)) return false;
+        return weekday.equals(that.weekday);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = studyGroup.hashCode();
+        result = 31 * result + weekday.hashCode();
+        return result;
+    }
 }

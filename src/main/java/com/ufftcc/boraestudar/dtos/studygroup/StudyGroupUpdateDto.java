@@ -29,7 +29,6 @@ public class StudyGroupUpdateDto {
     private ModalityEnum modality;
 
     @JsonAlias("weekdays")
-    @NotNull(message = "Weekdays is required")
     private List<Weekday> studyGroupWeekdays;
 
     public Long getUserId() {
