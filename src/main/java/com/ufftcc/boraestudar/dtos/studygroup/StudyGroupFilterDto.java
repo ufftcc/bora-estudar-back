@@ -15,15 +15,15 @@ public record StudyGroupFilterDto(String title,
                                   @JsonAlias("weekdays")
                                   List<Long> weekdays,
                                   ModalityEnum modality,
-                                  Long ownerId) {
+                                  Long studentId) {
 
-    public StudyGroupFilterDto(String title, String description, String subjectName, LocalTime meetingTime, List<Long> weekdays, ModalityEnum modality, Long ownerId) {
+    public StudyGroupFilterDto(String title, String description, String subjectName, LocalTime meetingTime, List<Long> weekdays, ModalityEnum modality, Long studentId) {
         this.title = title;
         this.description = description;
         this.subjectName = subjectName;
         this.meetingTime = meetingTime;
         this.weekdays = weekdays;
         this.modality = modality;
-        this.ownerId= ownerId;
+        this.studentId= studentId;
     }
 }
