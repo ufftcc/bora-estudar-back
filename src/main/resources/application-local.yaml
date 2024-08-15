@@ -39,3 +39,6 @@ security:
   email:
     token:
       expiration-time-minutes: 60
+discord:
+  token: MTIzNzYzMjk1NTE0NTI1NzAyMQ.G1F77C.1sr96uENcZgnptTyYbPPxJWUX5kVZNRcWh7np0
+  guildId: 1237585539314487476
