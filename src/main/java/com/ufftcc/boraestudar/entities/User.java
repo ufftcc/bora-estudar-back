@@ -18,6 +18,7 @@ public class User {
     public static final String COLUMN_EMAIL ="APUS_DS_EMAIL";
     public static final String COLUMN_PASSWORD = "APUS_DS_PASSWORD";
     public static final String COLUMN_IS_ENABLED = "APUS_IS_ENABLED";
+    public static final String COLUMN_DISCORD_ID = "APUS_ID_DISCORD";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +36,9 @@ public class User {
 
     @Column(name = COLUMN_IS_ENABLED, nullable = false)
     private Boolean isEnabled = false;
+
+    @Column(name = COLUMN_DISCORD_ID, nullable = true)
+    private String discordId;
 
     public User() {
     }
@@ -83,6 +87,10 @@ public class User {
         this.isEnabled = isEnabled;
     }
 
+    public String getDiscordId() { return discordId; }
+
+    public void setDiscordId(String discordId) { this.discordId = discordId; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,4 +118,5 @@ public class User {
                 ", password='" + password + '\'' +
                 '}';
     }
+
 }

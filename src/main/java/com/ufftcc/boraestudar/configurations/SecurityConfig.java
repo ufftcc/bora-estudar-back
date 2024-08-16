@@ -63,12 +63,12 @@ public class SecurityConfig {
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
-                auth.requestMatchers("/confirm","/signin", "/signup", "/signout").permitAll()
+                auth.requestMatchers("/confirm","/signin", "/signup", "/signout", "/discord").permitAll()
                     .requestMatchers("/h2/**").permitAll()
                     .anyRequest().authenticated()
             );
 
-
+            
         http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
