@@ -11,6 +11,8 @@ public class UserResponseBasicDto {
 
     private String email;
 
+    private String discordId;
+
     public Long getId() {
         return id;
     }
@@ -35,4 +37,11 @@ public class UserResponseBasicDto {
         this.email = email;
     }
 
+    public String getDiscordId() {
+        return discordId;
+    }
+
+    public void setDiscordId(String discordId) {
+        this.discordId=discordId;
+    }
 }
