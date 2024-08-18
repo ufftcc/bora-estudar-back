@@ -13,6 +13,8 @@ public class UserResponseBasicDto {
 
     private String discordId;
 
+    private boolean isDiscordAssociate;
+
     public Long getId() {
         return id;
     }
@@ -42,6 +44,14 @@ public class UserResponseBasicDto {
     }
 
     public void setDiscordId(String discordId) {
-        this.discordId=discordId;
+        this.discordId = discordId;
+    }
+
+    public void setIsDiscordAssociate() {
+        this.isDiscordAssociate = this.discordId.isBlank();
+    }
+
+    public boolean getIsDiscordAssociate() {
+        return isDiscordAssociate;
     }
 }
