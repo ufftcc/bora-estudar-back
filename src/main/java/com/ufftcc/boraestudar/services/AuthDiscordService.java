@@ -3,6 +3,10 @@ package com.ufftcc.boraestudar.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ufftcc.boraestudar.dtos.DiscordUserResponseDto;
+import com.ufftcc.boraestudar.dtos.user.UserUpdateDto;
+import com.ufftcc.boraestudar.entities.User;
+import com.ufftcc.boraestudar.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
@@ -36,9 +40,16 @@ public class AuthDiscordService {
     @Value("${spring.security.oauth2.client.registration.discord.clientName}")
     String clientName;
 
-    public String getDiscordUser(String code){
+    private final UserService service;
+    private final UserMapper mapper;
+    public AuthDiscordService(UserService service, UserMapper mapper) {
+        this.service = service;
+        this.mapper = mapper;
+    }
 
-        String accessToken = getCodeBearerAuth(code);
+    public String getDiscordUser(String code, String userId){
+
+        String accessToken = getCodeBearerAuth(code,userId);
 
         String url = userInfoUri;
 
@@ -50,13 +61,20 @@ public class AuthDiscordService {
 
         RestTemplateBuilder rtb = new RestTemplateBuilder();
 
-        ResponseEntity<String> response = rtb.basicAuthentication(clientId,clientSecret).build().exchange(url, HttpMethod.GET, header, String.class);
+        ResponseEntity<DiscordUserResponseDto> response = rtb.basicAuthentication(clientId,clientSecret).build().
+                exchange(url, HttpMethod.GET, header, DiscordUserResponseDto.class);
+
+        if (response.getStatusCode().value() == HttpStatus.OK.value()){
+            User user = service.findById(Long.valueOf(userId));
+            user.setDiscordId(response.getBody().getId());
+            service.updateById(Long.valueOf(userId),mapper.toTransferObject(user, UserUpdateDto.class));
+        }
 
         return response.toString();
 
     }
 
-    public String getCodeBearerAuth(String code) {
+    public String getCodeBearerAuth(String code, String userId) {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -65,7 +83,7 @@ public class AuthDiscordService {
                 .queryParam("client_secret" , clientSecret)
                 .queryParam("grant_type"    , authorizationGrantType)
                 .queryParam("code"          , code)
-                .queryParam("redirect_uri"  , redirectUri)
+                .queryParam("redirect_uri"  , redirectUri+userId)
                 .queryParam("scope"         , "identify")
                 .toUriString();
 
@@ -105,6 +123,5 @@ public class AuthDiscordService {
 
         return accessToken;
     }
-
 
 }
