@@ -16,6 +16,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import io.micrometer.common.util.StringUtils;
 
 @RestController
 @RequestMapping
@@ -51,7 +52,10 @@ public class AuthController {
         User authenticatedUser = authService.authenticate(dto);
         ResponseCookie jwtCookie = jwtService.generateJwtHttpOnlyCookie(authenticatedUser.getEmail());
         response.addHeader("Set-Cookie", jwtCookie.toString());
-        return mapper.toTransferObject(authenticatedUser, UserResponseBasicDto.class);
+        //todo verificar como modificar atributo do mapper
+        UserResponseBasicDto urbd = mapper.toTransferObject(authenticatedUser, UserResponseBasicDto.class);
+        urbd.setIsDiscordAssociate(StringUtils.isNotBlank(urbd.getDiscordId()));
+        return urbd;
     }
 
     @PostMapping("/signout")
