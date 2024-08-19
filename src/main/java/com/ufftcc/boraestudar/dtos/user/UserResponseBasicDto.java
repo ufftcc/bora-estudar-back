@@ -47,8 +47,8 @@ public class UserResponseBasicDto {
         this.discordId = discordId;
     }
 
-    public void setIsDiscordAssociate() {
-        this.isDiscordAssociate = this.discordId.isBlank();
+    public void setIsDiscordAssociate(boolean isDiscordAssociate) {
+        this.isDiscordAssociate = isDiscordAssociate;
     }
 
     public boolean getIsDiscordAssociate() {
