@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class UserUpdateDto {
 
     private String name;
-
     private String email;
+    private String discordId;
 
     public String getName() {
         return name;
@@ -23,5 +23,13 @@ public class UserUpdateDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDiscordId() {
+        return discordId;
+    }
+
+    public void setDiscordId(String discordId) {
+        this.discordId = discordId;
     }
 }
