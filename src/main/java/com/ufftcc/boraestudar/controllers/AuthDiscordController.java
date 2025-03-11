@@ -17,10 +17,12 @@ public class AuthDiscordController {
         this.authDiscordService = authDiscordService;
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public String doAuthDiscord(HttpServletRequest request, HttpServletResponse response, @RequestParam String code, @PathVariable String id) {
+    public String doAuthDiscord(HttpServletRequest request, HttpServletResponse response,
+                                @RequestParam String code,
+                                @RequestParam String state) {
 
-        return authDiscordService.getDiscordUser(code,id);
+        return authDiscordService.getDiscordUser(code,state);
     }
 }

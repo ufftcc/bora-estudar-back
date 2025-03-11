@@ -83,26 +83,26 @@ public class AuthDiscordService {
                 .queryParam("client_secret" , clientSecret)
                 .queryParam("grant_type"    , authorizationGrantType)
                 .queryParam("code"          , code)
-                .queryParam("redirect_uri"  , redirectUri+userId)
+                .queryParam("redirect_uri"  , redirectUri)
                 .queryParam("scope"         , "identify")
+                .queryParam("state"         , userId)
                 .toUriString();
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("client_id", clientId);
         body.add("client_secret", clientSecret);
         body.add("code", code);
+        body.add("grant_type", authorizationGrantType);
+        body.add("redirect_uri", redirectUri);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded");
         headers.add("Accept-Encoding", "application/x-www-form-urlencoded");
 
-        HttpEntity<Object> request = new HttpEntity<>(body, headers);
-
-        RestTemplateBuilder rtb = new RestTemplateBuilder();
-        ResponseEntity<String> response = rtb.basicAuthentication(clientId,clientSecret).build().postForEntity(url, request, String.class);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
         // parte dois
-
         int startIndex = response.toString().indexOf("{");
         int endIndex = response.toString().indexOf("}");
         String jsonPart = response.toString().substring(startIndex, endIndex + 1);
