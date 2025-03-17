@@ -114,6 +114,10 @@ public class StudyGroupService {
             });
         }
 
+        if (receivedStudyGroup.getDiscordId() != null) {
+            persistedStudyGroup.setDiscordId(receivedStudyGroup.getDiscordId());
+        }
+
         return persistedStudyGroup;
     }
 

@@ -19,6 +19,7 @@ public class StudyGroup {
     private static final String COLUMN_MAX_STUDENTS = "STGR_QT_MAX_STUDENTS";
     private static final String COLUMN_VISIBILITY = "STGR_IS_PRIVATE";
     public static final String COLUMN_MODALITY = "STGR_DS_MODALITY";
+    public static final String COLUMN_DISCORD_ID = "STGR_ID_DISCORD";
     public static final String STUDY_GROUP = "studyGroup";
 
     @Id
@@ -58,6 +59,9 @@ public class StudyGroup {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = STUDY_GROUP)
     private List<StudyGroupWeekday> studyGroupWeekdays;
+
+    @Column(name = COLUMN_DISCORD_ID, nullable = true)
+    private Long discordId;
 
     // TODO Add modalidade do grupo de estudos (presencial, online, híbrido)
 
@@ -179,6 +183,14 @@ public class StudyGroup {
 
     public void setModality(ModalityEnum modality) {
         this.modality = modality;
+    }
+
+    public Long getDiscordId(){
+        return discordId;
+    }
+
+    public void setDiscordId(Long discordId){
+        this.discordId = discordId;
     }
 
     @Override
