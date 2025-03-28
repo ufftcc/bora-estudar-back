@@ -10,12 +10,16 @@ import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Role;
 import discord4j.core.spec.*;
 import discord4j.rest.util.PermissionSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static discord4j.rest.util.Permission.VIEW_CHANNEL;
@@ -25,6 +29,7 @@ import static java.lang.System.out;
 @Service
 public class DiscordBotService {
 
+    private static final Logger log = LoggerFactory.getLogger(DiscordBotService.class);
     @Value("${discord.token}")
     String token;
 
@@ -105,8 +110,8 @@ public class DiscordBotService {
         return role.block().edit();
     }
 
-    /*
-        public void createStudyGroupServer(StudyGroup studyGroup, StudyGroupCreateDto dto) {
+
+        public void createStudyGroupServer2(StudyGroup studyGroup, StudyGroupCreateDto dto) {
             DiscordClient client = DiscordClient.create(token);
 
             client.withGateway((GatewayDiscordClient gateway) -> {
@@ -114,8 +119,7 @@ public class DiscordBotService {
                 Guild guild = gateway.getGuildById(Snowflake.of(guildId)).block();
                 assert guild != null;
 
-                Random rand = new Random();
-                List<Role> roleList = guild.getRoles().collectList().block();
+                //List<Role> roleList = guild.getRoles().collectList().block();
 
                 String randomAsString = String.valueOf(studyGroup.getId());
 
@@ -124,7 +128,9 @@ public class DiscordBotService {
 
                 RoleEditMono role = createRole(classCode, className, guild);
 
-                role.block().getId();
+                long discordId  = Objects.requireNonNull(role.block()).getId().asLong();
+
+                log.info("THIAGO: " + String.valueOf(discordId));
 
                 CategoryEditMono category = createCategoryWithRole(classCode + "-" + className, guild, role);
                 createChannelInCategory(1, classCode + "-" + className, guild, category);
@@ -135,38 +141,69 @@ public class DiscordBotService {
             }).then().subscribe();
 
         }
-     */
+
     public Mono<Long> createStudyGroupServer(StudyGroup studyGroup, StudyGroupCreateDto dto) {
         DiscordClient client = DiscordClient.create(token);
 
-        AtomicReference<Long> discordId = new AtomicReference<>(0L);
+        return client.login() // Retorna Mono<GatewayDiscordClient>
+                .flatMap(gateway -> gateway.getGuildById(Snowflake.of(guildId)))
+                .flatMap(guild -> {
+                    String randomAsString = String.valueOf(studyGroup.getId());
+                    String classCode = dto.getSubject().getCode();
+                    String className = dto.getSubject().getName().concat("-" + randomAsString);
 
-        client.withGateway((GatewayDiscordClient gateway) -> {
-            assert gateway != null;
-            Guild guild = gateway.getGuildById(Snowflake.of(guildId)).block();
-            assert guild != null;
+                    return createRole(classCode, className, guild)
+                            .flatMap(role -> {
+                                long discordId = role.getId().asLong();
+                                log.info("THIAGO: " + discordId);
 
-            String randomAsString = String.valueOf(studyGroup.getId());
-
-            final String classCode = dto.getSubject().getCode();
-            final String className = dto.getSubject().getName().concat("-" + randomAsString);
-
-            //RoleEditMono role = createRole(classCode, className, guild);
-
-            createRole(classCode, className, guild).flatMap(role -> {
-                //studyGroup.setDiscordId(role.getId().asLong());
-                CategoryEditMono category = createCategoryWithRole(classCode + "-" + className, guild, role.edit());
-                createChannelInCategory(1, classCode + "-" + className, guild, category);
-                createChannelInCategory(2, classCode + "-" + className, guild, category);
-                discordId.set(role.getId().asLong());
-                return Mono.empty();
-            });
-
-            return Mono.empty();
-
-        }).then();
-
-        return Mono.just(discordId.get());
+                                return createCategoryWithRole(classCode + "-" + className, guild, role.edit())
+                                        .flatMap(category ->
+                                                Mono.when(
+                                                        Mono.fromRunnable(() -> createChannelInCategory(1, classCode + "-" + className, guild, category.edit())),
+                                                        Mono.fromRunnable(() -> createChannelInCategory(2, classCode + "-" + className, guild, category.edit()))
+                                                )
+                                        )
+                                        .thenReturn(discordId); // Retorna o discordId corretamente
+                            });
+                });
     }
+
+
+
+
+
+//    public Mono<Long> createStudyGroupServer(StudyGroup studyGroup, StudyGroupCreateDto dto) {
+//        DiscordClient client = DiscordClient.create(token);
+//
+//        AtomicReference<Long> discordId = new AtomicReference<>(0L);
+//
+//        client.withGateway((GatewayDiscordClient gateway) -> {
+//            assert gateway != null;
+//            Guild guild = gateway.getGuildById(Snowflake.of(guildId)).block();
+//            assert guild != null;
+//
+//            String randomAsString = String.valueOf(studyGroup.getId());
+//
+//            final String classCode = dto.getSubject().getCode();
+//            final String className = dto.getSubject().getName().concat("-" + randomAsString);
+//
+//            //RoleEditMono role = createRole(classCode, className, guild);
+//
+//            createRole(classCode, className, guild).flatMap(role -> {
+//                //studyGroup.setDiscordId(role.getId().asLong());
+//                CategoryEditMono category = createCategoryWithRole(classCode + "-" + className, guild, role.edit());
+//                createChannelInCategory(1, classCode + "-" + className, guild, category);
+//                createChannelInCategory(2, classCode + "-" + className, guild, category);
+//                discordId.set(role.getId().asLong());
+//                return Mono.empty();
+//            });
+//
+//            return Mono.empty();
+//
+//        }).then();
+//
+//        return Mono.just(discordId.get());
+//    }
 
 }
