@@ -70,8 +70,7 @@ public class StudyGroupService {
         StudyGroup grupoEstudoEncontrado = findById(groupId);
 
         if (!isOwner(groupId, dto.getUserId())) {
-            //TODO criar exceção para usuário não ser o dono do grupo e lançar HttpStatus.FORBIDDEN
-            throw new InsufficientPrivilegesException("Usuario nao possui permissao para alterar o grupo de estudo");
+            throw new InsufficientPrivilegesException(dto.getUserId());
         }
 
         StudyGroup studyGroup = mapper.toEntity(dto);
