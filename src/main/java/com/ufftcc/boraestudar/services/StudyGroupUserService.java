@@ -37,8 +37,7 @@ public class StudyGroupUserService {
     }
 
     public StudyGroupUser findByUserIdAndStudyGroupId(Long studentId, Long studyGroupId) {
-        //TODO: criar exceção para usuário não cadastrado no grupo
         return repository.findByUserIdAndStudyGroupId(studentId, studyGroupId).orElseThrow(() ->
-                new UserNotRegisteredException("Usuário não cadastrado no grupo de estudo"));
+                new UserNotRegisteredException(studentId));
     }
 }
