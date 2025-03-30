@@ -32,8 +32,7 @@ public class StudyGroupUserService {
 
     public void existsByUserIdAndStudyGroupId(Long userId, Long studyGroupId) {
         if (repository.existsByUserIdAndStudyGroupId(userId, studyGroupId)) {
-            //TODO: criar exceção para usuário já cadastrado no grupo
-            throw new UserAlreadyRegisteredException("Este estudante ja esta cadastrado no grupo de estudos.");
+            throw new UserAlreadyRegisteredException(userId);
         }
     }
 
