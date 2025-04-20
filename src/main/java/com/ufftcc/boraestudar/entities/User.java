@@ -38,7 +38,7 @@ public class User {
     private Boolean isEnabled = false;
 
     @Column(name = COLUMN_DISCORD_ID, nullable = true)
-    private String discordId;
+    private Long discordId;
 
     public User() {
     }
@@ -87,9 +87,9 @@ public class User {
         this.isEnabled = isEnabled;
     }
 
-    public String getDiscordId() { return discordId; }
+    public Long getDiscordId() { return discordId; }
 
-    public void setDiscordId(String discordId) { this.discordId = discordId; }
+    public void setDiscordId(Long discordId) { this.discordId = discordId; }
 
     @Override
     public boolean equals(Object o) {

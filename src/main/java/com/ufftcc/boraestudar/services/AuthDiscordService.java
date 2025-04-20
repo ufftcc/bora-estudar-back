@@ -66,7 +66,7 @@ public class AuthDiscordService {
 
         if (response.getStatusCode().value() == HttpStatus.OK.value()){
             User user = service.findById(Long.valueOf(userId));
-            user.setDiscordId(response.getBody().getId());
+            user.setDiscordId(Long.valueOf(response.getBody().getId()));
             service.updateById(Long.valueOf(userId),mapper.toTransferObject(user, UserUpdateDto.class));
         }
 

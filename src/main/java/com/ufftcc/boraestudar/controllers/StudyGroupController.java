@@ -1,5 +1,6 @@
 package com.ufftcc.boraestudar.controllers;
 
+import com.ufftcc.boraestudar.entities.User;
 import com.ufftcc.boraestudar.mappers.StudyGroupMapper;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupCreateDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupResponseDto;
@@ -8,12 +9,12 @@ import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupUpdateDto;
 import com.ufftcc.boraestudar.entities.StudyGroup;
 import com.ufftcc.boraestudar.services.DiscordBotService;
 import com.ufftcc.boraestudar.services.StudyGroupService;
+import com.ufftcc.boraestudar.services.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +26,14 @@ public class StudyGroupController {
     private final StudyGroupService studyGroupService;
     private final StudyGroupMapper mapper;
     private final DiscordBotService discordBotService;
+    private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(DiscordBotService.class);
 
-    public StudyGroupController(StudyGroupService service, StudyGroupMapper mapper, DiscordBotService discordBotService) {
+    public StudyGroupController(StudyGroupService service, StudyGroupMapper mapper, DiscordBotService discordBotService, UserService userService) {
         this.studyGroupService = service;
         this.mapper = mapper;
         this.discordBotService = discordBotService;
+        this.userService = userService;
     }
 
     @PostMapping
@@ -38,7 +41,16 @@ public class StudyGroupController {
     public StudyGroupResponseDto save(@Valid @RequestBody StudyGroupCreateDto dto) {
         StudyGroup createdStudyGroup = studyGroupService.create(dto);
         discordBotService.createStudyGroupServer(createdStudyGroup, dto)
-                .doOnSuccess(discordId -> log.info("ID da role: " + discordId))
+                .doOnSuccess(discordId -> {
+                    log.info("ID da role: " + discordId);
+                    createdStudyGroup.setDiscordId((discordId));
+                    studyGroupService.updateByIdOnGroupCreation(createdStudyGroup);
+
+                    Long userDiscordId = userService.findById(dto.getOwnerId()).getDiscordId();
+
+                    discordBotService.registerUserToRole(userDiscordId, createdStudyGroup.getDiscordId());
+
+                })
                 .subscribe();
 
         return mapper.toTransferObject(createdStudyGroup, StudyGroupResponseDto.class);
@@ -69,11 +81,21 @@ public class StudyGroupController {
     @ResponseStatus(HttpStatus.OK)
     public void registerUserToGroup(@PathVariable Long groupId, @PathVariable Long studentId) {
         studyGroupService.registerUserToGroup(groupId, studentId);
+
+        StudyGroup studyGroup = studyGroupService.findById(groupId);
+        User user = userService.findById(studentId);
+
+        discordBotService.registerUserToRole(user.getDiscordId(), studyGroup.getDiscordId());
     }
 
     @PostMapping("/{groupId}/students/{studentId}/leave")
     public void removeStudentFromGroup(@PathVariable Long groupId, @PathVariable Long studentId) {
+
+        StudyGroup studyGroup = studyGroupService.findById(groupId);
+        User user = userService.findById(studentId);
+
         studyGroupService.removeStudentFromGroup(groupId, studentId);
+        discordBotService.removeUserFromRole(user.getDiscordId(), studyGroup.getDiscordId());
     }
 
 //    @DeleteMapping("/{id}")

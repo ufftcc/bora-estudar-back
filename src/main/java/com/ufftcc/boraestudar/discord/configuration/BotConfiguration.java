@@ -5,6 +5,7 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.Event;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.gateway.intent.Intent;
 import discord4j.gateway.intent.IntentSet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,19 +20,21 @@ public class BotConfiguration {
     private String TOKEN;
 
     @Bean
-    public GatewayDiscordClient gatewayDiscordClient() {
-//        DiscordClient client = DiscordClient.create(TOKEN);
-//        GatewayDiscordClient gateway = client.login().block();
+    public GatewayDiscordClient gatewayDiscordClient(@Value("${discord.token}") String token) {
+        return DiscordClient.create(token)
+                .gateway()
+                .setEnabledIntents(IntentSet.of(Intent.GUILD_MEMBERS))
+                .login()
+                .block();
+    }
+    /*public GatewayDiscordClient gatewayDiscordClient() {
+
         GatewayDiscordClient gateway = DiscordClientBuilder.create(TOKEN)
                 .build()
                 .gateway()
                 .setEnabledIntents(IntentSet.all())
                 .login()
                 .block();
-
-        // System.out.println("Registrando os EventListeners . . . ");
-
-
 
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
             if (event.getMessage().getContent().equalsIgnoreCase("!ping")) {
@@ -42,4 +45,5 @@ public class BotConfiguration {
 
         return gateway;
     }
+    */
 }

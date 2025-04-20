@@ -167,4 +167,10 @@ public class StudyGroupService {
             repository.delete(studyGroup);
         }
     }
+
+    @Transactional
+    public StudyGroup updateByIdOnGroupCreation(StudyGroup studyGroup) {
+        findById(studyGroup.getId());
+        return repository.save(studyGroup);
+    }
 }
