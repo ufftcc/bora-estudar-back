@@ -6,12 +6,14 @@ import com.ufftcc.boraestudar.entities.StudyGroup;
 import static discord4j.rest.util.Permission.VIEW_CHANNEL;
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClient;
+import discord4j.core.DiscordClientBuilder;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.PermissionOverwrite;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Role;
-import discord4j.core.object.entity.channel.TextChannel;
-import discord4j.core.object.entity.channel.VoiceChannel;
+import discord4j.core.object.entity.channel.*;
 import discord4j.core.spec.*;
+import discord4j.gateway.intent.IntentSet;
 import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
 
@@ -32,12 +34,11 @@ public class DiscordBotService {
     private static final Logger log = LoggerFactory.getLogger(DiscordBotService.class);
     @Value("${discord.token}")
     String token;
-
     @Value("${discord.guildId}")
     String guildId;
 
     private void createChannelInCategory(Integer typeChannel, String textChannelName, Guild guild, CategoryEditMono category) {
-        log.info("Criando o Canal tipo {}  . . .", typeChannel.toString());
+        //log.info("Criando o Canal tipo {}  . . .", typeChannel.toString());
         if (typeChannel.equals(1)) {
             createTextChannelInCategory(textChannelName, guild, category);
         }
@@ -47,25 +48,25 @@ public class DiscordBotService {
     }
 
     private void createTextChannelInCategory(String textChannelName, Guild guild, CategoryEditMono category) {
-        log.info("Criando o Canal de Texto . . .");
+        //log.info("Criando o Canal de Texto . . .");
         TextChannelCreateMono textChannel = guild.createTextChannel(textChannelName);
-        log.info("Associando o Canal de Texto: {} à Categoria: {}", textChannelName, category.category().getName());
+        //log.info("Associando o Canal de Texto: {} à Categoria: {}", textChannelName, category.category().getName());
         textChannel.withParentId(category.category().getId()).block();
-        log.info("Canal de Texto criado com sucesso: {}", textChannelName);
-        log.info("id do Canal de Texto: {}", textChannel);
+        //log.info("Canal de Texto criado com sucesso: {}", textChannelName);
+        //log.info("id do Canal de Texto: {}", textChannel);
     }
 
     private void createVoiceChannelInCategory(String voiceChannelName, Guild guild, CategoryEditMono category) {
-        log.info("Criando o Canal de Voz . . .");
+        //log.info("Criando o Canal de Voz . . .");
         VoiceChannelCreateMono voiceChannel = guild.createVoiceChannel(voiceChannelName);
-        log.info("Associando o Canal de Voz: {} à Categoria: {}",voiceChannelName,category.category().getName());
+        //log.info("Associando o Canal de Voz: {} à Categoria: {}",voiceChannelName,category.category().getName());
         voiceChannel.withParentId(category.category().getId()).block();
-        log.info("Canal de Voz criado com sucesso: {}",voiceChannelName);
-        log.info("id do Canal de Voz: {}",voiceChannel);
+        //log.info("Canal de Voz criado com sucesso: {}",voiceChannelName);
+        //log.info("id do Canal de Voz: {}",voiceChannel);
     }
 
     private CategoryEditMono createCategoryWithRole(String categoryName, Guild guild, RoleEditMono role) {
-        log.info("Criando a Categoria . . .");
+        //log.info("Criando a Categoria . . .");
         PermissionSet viewCategory = PermissionSet.of(VIEW_CHANNEL);
         PermissionSet disableCategory = PermissionSet.none();
         disableCategory.removeAll(viewCategory);
@@ -75,10 +76,10 @@ public class DiscordBotService {
         for (Role iteratorRole : listRoles) {
             if (iteratorRole.getName().equals("@everyone")) {
                 idEveryone = iteratorRole.getId();
-                log.info("id do Cargo @everyone: {}", idEveryone);
+                //log.info("id do Cargo @everyone: {}", idEveryone);
             }
         }
-        log.info("id do Cargo parâmetro: {}", role.role().getId());
+        //log.info("id do Cargo parâmetro: {}", role.role().getId());
 
         CategoryCreateMono createCategory = guild
                 .createCategory(categoryName)
@@ -95,15 +96,15 @@ public class DiscordBotService {
 
         CategoryEditMono category = createCategory.block().edit();
 
-        log.info("Categoria criada com sucesso: {}", categoryName);
-        log.info("id da Categoria: {}", category.category().getId());
+        //log.info("Categoria criada com sucesso: {}", categoryName);
+        //log.info("id da Categoria: {}", category.category().getId());
         return category;
     }
 
     private RoleEditMono createRole(String classCode, String className, Guild guild) {
-        log.info("Criando o Cargo. . .");
+        //log.info("Criando o Cargo. . .");
         String roleName = classCode + "-" + className;
-        log.info("Nome: {}", roleName);
+        //log.info("Nome: {}", roleName);
         RoleCreateMono role = guild.createRole().withName(roleName);
         return role.block().edit();
     }
@@ -121,7 +122,7 @@ public class DiscordBotService {
                     return createRole(classCode, className, guild)
                             .flatMap(role -> {
                                 long discordId = role.getId().asLong();
-                                log.info("THIAGO: " + discordId);
+                                //log.info("discordId : {}",  discordId);
 
                                 return createCategoryWithRole(classCode + "-" + className, guild, role.edit())
                                         .flatMap(category ->
@@ -139,9 +140,9 @@ public class DiscordBotService {
 
         registerOnGuild(userDiscordId, groupDiscordId)
                 .doOnSuccess(success -> {
-                    log.info("user : " + userDiscordId.toString());
-                    log.info("group : " + groupDiscordId.toString());
-                    log.info("se escreveu true, funcionou! " + success);
+                    //log.info("user : " + userDiscordId.toString());
+                    //log.info("group : " + groupDiscordId.toString());
+                    log.info("registerUserToRole: se escreveu true, funcionou! {} ", success);
                 })
                 .doOnError(error -> {
                     log.info(error.getMessage());
@@ -174,10 +175,9 @@ public class DiscordBotService {
 
         removeOnGuild(userDiscordId, groupDiscordId)
                 .doOnSuccess(success -> {
-                    log.info("user : {}", userDiscordId.toString());
-                    log.info("group : {}", groupDiscordId.toString());
-                    log.info("se escreveu true abaixo, funcionou! ");
-                    log.info(success.toString());
+                    //log.info("user : {}", userDiscordId.toString());
+                    //log.info("group : {}", groupDiscordId.toString());
+                    log.info("removeUserFromRole: se escreveu true, funcionou! {}", success);
                 })
                 .doOnError(error -> {
                     log.info(error.getMessage());
@@ -186,9 +186,12 @@ public class DiscordBotService {
     }
 
     private Mono<Boolean> removeOnGuild(Long userDiscordId, Long groupDiscordId) {
-        DiscordClient client = DiscordClient.create(token);
+        DiscordClient client = DiscordClient.builder(token)
+                .build();
 
-        return client.login()
+        return client.gateway()
+                .setEnabledIntents(IntentSet.all())
+                .login()
                 .flatMap(gateway -> gateway.getGuildById(Snowflake.of(guildId)))
                 .flatMap(guild -> removeRoleFromUser(guild, userDiscordId, groupDiscordId))
                 .onErrorReturn(false);
@@ -200,60 +203,62 @@ public class DiscordBotService {
 
         return guild.getMemberById(userSnowflake)
                 .flatMap(member -> member.removeRole(roleSnowflake))
-                .thenReturn(true)
-                .onErrorReturn(false);
+                .then(Mono.defer(() -> guild.getRoleById(roleSnowflake)
+                        .flatMap(role -> checkIfRoleIsEmpty(guild, roleSnowflake)
+                                .flatMap(isEmpty -> {
+                                    if (isEmpty) {
+                                        return deleteAllResources(guild, role.getName())
+                                                .then(role.delete())
+                                                .thenReturn(true);
+                                    }
+                                    return Mono.just(true);
+                                })
+                        )))
+                .onErrorResume(e -> {
+                    log.error("Error in removeRoleFromUser: ", e);
+                    return Mono.just(false);
+                });
     }
 
-    /**
-     * Método para excluir uma role e todos os canais e categorias associados.
-     * @param roleSnowflake O snowflake da role a ser excluída.
-     */
-    public void deleteRoleAndAssociatedChannels(String roleSnowflake) {
-        DiscordClient client = DiscordClient.create(token);
-
-        // Conectar e obter a guilda
-        client.login()
-                .flatMap(gateway -> gateway.getGuildById(Snowflake.of(guildId)))
-                .flatMap(guild -> {
-                    // Obter a role a partir do snowflake
-                    return guild.getRoleById(Snowflake.of(roleSnowflake))
-                            .flatMap(role -> {
-                                // Excluir todos os canais associados à role
-                                return deleteChannels(guild, role)
-                                        .then(deleteRole(guild, role));
-                            });
-                })
-                .doOnError(error -> log.error("Erro ao excluir role e canais: ", error))
-                .subscribe();
+    private Mono<Boolean> checkIfRoleIsEmpty(Guild guild, Snowflake roleId) {
+        return guild.getMembers()
+                .filter(member -> member.getRoleIds().contains(roleId))
+                .next()
+                .map(__ -> false) // Se encontrou algum membro, não está vazia
+                .defaultIfEmpty(true); // Se não encontrou, está vazia
     }
 
-    /**
-     * Método para excluir os canais associados à role.
-     * @param guild O servidor (guild).
-     * @param role A role que será usada para filtrar os canais associados.
-     * @return Mono<Void> após excluir os canais.
-     */
-    private Mono<Void> deleteChannels(Guild guild, Role role) {
+    private Mono<Void> deleteAllResources(Guild guild, String resourceName) {
+
+        String voiceChannelName = resourceName;
+        String textChannelName = resourceName.replace(" ","-").toLowerCase();
+        String categoryName = resourceName;
+
+        // deletando canal de texto
         return guild.getChannels()
-                .filter(channel -> channel instanceof TextChannel || channel instanceof VoiceChannel)
-                .filter(channel -> channel.getPermissionsFor(role).contains(Permission.MANAGE_CHANNELS))
-                .flatMap(channel -> {
-                    log.info("Excluindo o canal: {}", channel.getName());
-                    return channel.delete();
-                })
+                .ofType(TextChannel.class)
+                .filter(textChannel -> textChannel.getName().equals(textChannelName))
+                .flatMap(textChannel -> textChannel.delete())
+                .then()
+                // deletando canal de voz
+                .then(Mono.defer(() ->
+                        guild.getChannels()
+                                .ofType(VoiceChannel.class)
+                                .filter(voiceChannel -> voiceChannel.getName().equals(voiceChannelName))
+                                .next()
+                                .flatMap(voiceChannel -> voiceChannel.delete())
+                 ))
+                .then()
+                //deletando categoria
+                .then(Mono.defer(() ->
+                        guild.getChannels()
+                                .ofType(Category.class)
+                                .filter(category -> category.getName().equals(categoryName))
+                                .next()
+                                .flatMap(category -> category.delete())
+                ))
                 .then();
-    }
 
-    /**
-     * Método para excluir a role.
-     * @param guild O servidor (guild).
-     * @param role A role a ser excluída.
-     * @return Mono<Void> após excluir a role.
-     */
-    private Mono<Void> deleteRole(Guild guild, Role role) {
-        log.info("Excluindo a role: {}", role.getName());
-        return role.delete();
     }
-
 
 }
