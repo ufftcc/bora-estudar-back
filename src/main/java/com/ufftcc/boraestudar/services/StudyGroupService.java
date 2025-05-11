@@ -144,11 +144,12 @@ public class StudyGroupService {
         StudyGroupUser studyGroupUser = studyGroupUserService.findByUserIdAndStudyGroupId(studentId, studyGroup.getId());
         studyGroupUserService.removeStudentFromGroup(studyGroupUser);
 
+        studyGroup.removeStudent(studyGroupUser);
+
         if (studyGroup.getOwnerId().equals(studyGroupUser.getUser().getId())) {
             setNewOwnerToGroup(studyGroup);
         }
 
-        studyGroup.removeStudent(studyGroupUser);
         repository.save(studyGroup);
 
         tryDeleteStudyGroup(studyGroup);
