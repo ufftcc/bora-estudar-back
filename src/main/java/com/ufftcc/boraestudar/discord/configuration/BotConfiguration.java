@@ -20,14 +20,7 @@ public class BotConfiguration {
     private String TOKEN;
 
     @Bean
-    public GatewayDiscordClient gatewayDiscordClient(@Value("${discord.token}") String token) {
-        return DiscordClient.create(token)
-                .gateway()
-                .setEnabledIntents(IntentSet.of(Intent.GUILD_MEMBERS))
-                .login()
-                .block();
-    }
-    /*public GatewayDiscordClient gatewayDiscordClient() {
+    public GatewayDiscordClient gatewayDiscordClient() {
 
         GatewayDiscordClient gateway = DiscordClientBuilder.create(TOKEN)
                 .build()
@@ -45,5 +38,5 @@ public class BotConfiguration {
 
         return gateway;
     }
-    */
+
 }
