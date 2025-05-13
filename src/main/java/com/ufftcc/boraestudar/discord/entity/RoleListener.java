@@ -41,13 +41,13 @@ public abstract class RoleListener {
                                 .forRole(Snowflake.of(guildId), disableCategory, viewCategory),
                         PermissionOverwrite
                                 .forRole(role.getId(), viewCategory, disableCategory));
-
-        List<PermissionOverwrite> po = category.permissionOverwrites().get();
         /*
-        for (PermissionOverwrite x : po) {
-            out.println("PermissionOverwrite x: " + x.toString());
-        }
-        */
+         * List<PermissionOverwrite> po = category.permissionOverwrites().get();
+         * 
+         * for (PermissionOverwrite x : po) {
+         * out.println("PermissionOverwrite x: " + x.toString());
+         * }
+         */
         return category.then();
 
     }

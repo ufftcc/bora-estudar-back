@@ -6,8 +6,6 @@ import com.ufftcc.boraestudar.entities.EmailVerificationToken;
 import com.ufftcc.boraestudar.entities.User;
 import com.ufftcc.boraestudar.mappers.UserMapper;
 import com.ufftcc.boraestudar.repositories.UserRepository;
-import com.ufftcc.boraestudar.security.JwtService;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

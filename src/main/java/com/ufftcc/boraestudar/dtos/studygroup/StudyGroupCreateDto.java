@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufftcc.boraestudar.dtos.subject.SubjectResponseDto;
-import com.ufftcc.boraestudar.dtos.user.UserResponseBasicDto;
 
 import com.ufftcc.boraestudar.entities.Weekday;
 import com.ufftcc.boraestudar.enums.ModalityEnum;

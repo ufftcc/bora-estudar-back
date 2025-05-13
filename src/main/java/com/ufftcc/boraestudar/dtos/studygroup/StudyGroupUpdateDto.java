@@ -2,7 +2,6 @@ package com.ufftcc.boraestudar.dtos.studygroup;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ufftcc.boraestudar.entities.StudyGroupWeekday;
 import com.ufftcc.boraestudar.entities.Weekday;
 import com.ufftcc.boraestudar.enums.ModalityEnum;
 import jakarta.validation.constraints.NotBlank;

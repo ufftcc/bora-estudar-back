@@ -1,7 +1,6 @@
 package com.ufftcc.boraestudar.repositories;
 
 import com.ufftcc.boraestudar.entities.StudyGroup;
-import com.ufftcc.boraestudar.entities.Weekday;
 import com.ufftcc.boraestudar.enums.ModalityEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -1,7 +1,5 @@
 package com.ufftcc.boraestudar.exceptions;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDateTime;
 
 public class JsonMessage {
