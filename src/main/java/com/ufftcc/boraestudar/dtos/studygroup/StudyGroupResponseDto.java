@@ -30,6 +30,8 @@ public class StudyGroupResponseDto {
 
     private List<Weekday> studyGroupWeekdays;
 
+    private String discordInviteUrl;
+
     @JsonIgnore
     private Boolean isPrivate;
 
@@ -121,5 +123,13 @@ public class StudyGroupResponseDto {
 
     public void setModality(ModalityEnum modality) {
         this.modality = modality;
+    }
+
+    public String getDiscordInviteUrl() {
+        return discordInviteUrl;
+    }
+
+    public void setDiscordInviteUrl(String discordInviteUrl) {
+        this.discordInviteUrl = discordInviteUrl;
     }
 }

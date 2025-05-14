@@ -20,6 +20,7 @@ public class StudyGroup {
     private static final String COLUMN_VISIBILITY = "STGR_IS_PRIVATE";
     public static final String COLUMN_MODALITY = "STGR_DS_MODALITY";
     public static final String COLUMN_DISCORD_ID = "STGR_ID_DISCORD";
+    public static final String COLUMN_DISCORD_INVITE = "STGR_INVITE_DISCORD";
     public static final String STUDY_GROUP = "studyGroup";
 
     @Id
@@ -62,6 +63,9 @@ public class StudyGroup {
 
     @Column(name = COLUMN_DISCORD_ID, nullable = true)
     private Long discordId;
+
+    @Column(name = COLUMN_DISCORD_INVITE, nullable = true)
+    private String discordInviteUrl;
 
     // TODO Add modalidade do grupo de estudos (presencial, online, híbrido)
 
@@ -217,5 +221,13 @@ public class StudyGroup {
         result = 31 * result + meetingTime.hashCode();
         result = 31 * result + studyGroupWeekdays.hashCode();
         return result;
+    }
+
+    public String getDiscordInviteUrl() {
+        return discordInviteUrl;
+    }
+
+    public void setDiscordInviteUrl(String discordInviteUrl) {
+        this.discordInviteUrl = discordInviteUrl;
     }
 }

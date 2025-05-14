@@ -14,7 +14,9 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,9 +43,11 @@ public class StudyGroupController {
     public StudyGroupResponseDto save(@Valid @RequestBody StudyGroupCreateDto dto) {
         StudyGroup createdStudyGroup = studyGroupService.create(dto);
         discordBotService.createStudyGroupServer(createdStudyGroup, dto)
-                .doOnSuccess(discordId -> {
-                    log.info("ID da role: " + discordId);
-                    createdStudyGroup.setDiscordId((discordId));
+                .doOnSuccess(discordOperationResult -> {
+                    log.info("ID da role: " + discordOperationResult.getRoleId());
+                    log.info("Invite: " + discordOperationResult.getInviteUrl());
+                    createdStudyGroup.setDiscordId(discordOperationResult.getRoleId());
+                    createdStudyGroup.setDiscordInviteUrl(discordOperationResult.getInviteUrl());
                     studyGroupService.updateByIdOnGroupCreation(createdStudyGroup);
 
                     Long userDiscordId = userService.findById(dto.getOwnerId()).getDiscordId();

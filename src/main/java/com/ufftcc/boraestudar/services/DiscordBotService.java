@@ -2,7 +2,7 @@ package com.ufftcc.boraestudar.services;
 
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupCreateDto;
 import com.ufftcc.boraestudar.entities.StudyGroup;
-
+import reactor.util.function.Tuple2; // Import necessário
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClient;
 import discord4j.core.object.Invite;
@@ -40,19 +40,77 @@ public class DiscordBotService {
     @Value("${discord.guildId}")
     String guildId;
 
-    private enum ChannelType {
-        TEXT, VOICE
+    private String generateClassName(StudyGroup studyGroup, StudyGroupCreateDto dto) {
+        log.info("code {}", dto.getSubject().getCode());
+        log.info("name {}", dto.getSubject().getName());
+        return (dto.getSubject().getCode() + "-" +
+                dto.getSubject().getName() + "-" +
+                studyGroup.getId()).replace(" ","-");
     }
 
-    private Mono<Void> createChannelInCategory(ChannelType channelType, String channelName, Guild guild, CategoryEditMono category, RoleEditMono role) {
-        return Mono.defer(() -> {
-            if (channelType == ChannelType.TEXT) {
-                return createTextChannelInCategory(channelName, guild, category, role);
-            } else if (channelType == ChannelType.VOICE) {
-                return createVoiceChannelInCategory(channelName, guild, category, role);
-            }
-            return Mono.empty();
-        });
+    private PermissionOverwrite[] getCategoryPermissionOverwrites(Role everyoneRole, RoleEditMono role) {
+
+        PermissionSet allowPermissionsRole = PermissionSet.of(
+                VIEW_CHANNEL,
+                SEND_MESSAGES,  // Para canais de texto
+                CONNECT,        // Para canais de voz
+                SPEAK,           // Para canais de voz
+                STREAM
+        );
+
+        PermissionSet disablePermissionsRole = PermissionSet.of(
+                CREATE_INSTANT_INVITE
+        );
+
+        PermissionSet disablePermissionsEveryone = PermissionSet.of(
+                VIEW_CHANNEL,
+                SEND_MESSAGES,  // Para canais de texto
+                CONNECT,        // Para canais de voz
+                SPEAK,          // Para canais de voz
+                CREATE_INSTANT_INVITE,
+                STREAM
+        );
+
+        List<PermissionOverwrite> po = new ArrayList<>();
+        po.add(PermissionOverwrite.forRole(everyoneRole.getId(), PermissionSet.none(), disablePermissionsEveryone));
+        po.add(PermissionOverwrite.forRole(role.role().getId(), allowPermissionsRole, disablePermissionsRole));
+
+        // Se precisar converter de volta para vetor
+        PermissionOverwrite[] poArray = po.toArray(new PermissionOverwrite[0]);
+
+        return poArray;
+    }
+
+    private Mono<Role> findEveryoneRole(Guild guild) {
+        return guild.getRoles()
+                .filter(role -> role.getName().equals("@everyone"))
+                .next()
+                .switchIfEmpty(Mono.error(new RuntimeException("Everyone role not found")));
+    }
+
+    private PermissionOverwrite[] getChannelPermissionOverwrites(Role everyoneRole, RoleEditMono role) {
+        return getCategoryPermissionOverwrites(everyoneRole, role);
+    }
+
+    private Mono<String> createChannelsInCategory(String channelName, Guild guild,
+                                                  CategoryEditMono category, RoleEditMono role) {
+
+        // Cria o canal de texto (transforma Void em String vazia)
+        Mono<String> textChannelOperation = createTextChannelInCategory(channelName, guild, category, role)
+                .thenReturn("");
+
+        // Cria o canal de voz (já retorna o invite)
+        Mono<String> voiceChannelOperation = createVoiceChannelInCategory(channelName, guild, category, role);
+
+        // Combina as operações e retorna apenas o invite
+        return Mono.zip(textChannelOperation, voiceChannelOperation)
+                .map(tuple -> {
+                    // tuple.getT1() -> resultado do canal de texto (string vazia)
+                    // tuple.getT2() -> invite do canal de voz
+                    return tuple.getT2();
+                })
+                .doOnSuccess(invite -> log.info("Canais criados. Invite: {}", invite))
+                .doOnError(e -> log.error("Falha na criação dos canais", e));
     }
 
     private Mono<Void> createTextChannelInCategory(String channelName, Guild guild, CategoryEditMono category, RoleEditMono role) {
@@ -89,76 +147,29 @@ public class DiscordBotService {
                 );
     }
 
-    private PermissionOverwrite[] getCategoryPermissionOverwrites(Role everyoneRole, RoleEditMono role) {
-
-        PermissionSet allowPermissionsRole = PermissionSet.of(
-                VIEW_CHANNEL,
-                SEND_MESSAGES,  // Para canais de texto
-                CONNECT,        // Para canais de voz
-                SPEAK,           // Para canais de voz
-                STREAM
-        );
-
-        PermissionSet disablePermissionsRole = PermissionSet.of(
-                CREATE_INSTANT_INVITE
-        );
-
-        PermissionSet disablePermissionsEveryone = PermissionSet.of(
-                VIEW_CHANNEL,
-                SEND_MESSAGES,  // Para canais de texto
-                CONNECT,        // Para canais de voz
-                SPEAK,          // Para canais de voz
-                CREATE_INSTANT_INVITE,
-                STREAM
-        );
-
-        List<PermissionOverwrite> po = new ArrayList<>();
-        po.add(PermissionOverwrite.forRole(everyoneRole.getId(), PermissionSet.none(), disablePermissionsEveryone));
-        po.add(PermissionOverwrite.forRole(role.role().getId(), allowPermissionsRole, disablePermissionsRole));
-
-        // Se precisar converter de volta para vetor
-        PermissionOverwrite[] poArray = po.toArray(new PermissionOverwrite[0]);
-
-        return poArray;
-    }
-
-    private PermissionOverwrite[] getChannelPermissionOverwrites(Role everyoneRole, RoleEditMono role) {
-        return getCategoryPermissionOverwrites(everyoneRole, role);
-    }
-
-    private Mono<Role> findEveryoneRole(Guild guild) {
-        return guild.getRoles()
-                .filter(role -> role.getName().equals("@everyone"))
-                .next()
-                .switchIfEmpty(Mono.error(new RuntimeException("Everyone role not found")));
-    }
-
-    private Mono<RoleEditMono> createRole(String classCode, String className, Guild guild) {
-        String roleName = classCode + "-" + className;
+    private Mono<RoleEditMono> createRole(String className, Guild guild) {
+        String roleName = className;
         return guild.createRole()
                 .withName(roleName)
                 .map(role -> role.edit());
     }
 
-    public Mono<Long> createStudyGroupServer(StudyGroup studyGroup, StudyGroupCreateDto dto) {
+    public Mono<DiscordOperationResult> createStudyGroupServer(StudyGroup studyGroup, StudyGroupCreateDto dto) {
         return DiscordClient.create(token)
                 .login()
                 .flatMap(gateway -> gateway.getGuildById(Snowflake.of(guildId)))
                 .flatMap(guild -> {
-                    String randomAsString = String.valueOf(studyGroup.getId());
-                    String classCode = dto.getSubject().getCode();
-                    String className = dto.getSubject().getName().concat("-" + randomAsString);
+                    String className = generateClassName(studyGroup, dto);
 
-                    return createRole(classCode, className, guild)
+                    return createRole(className, guild)
                             .flatMap(role -> {
                                 long discordId = role.role().getId().asLong();
 
-                                return createCategoryWithRole(classCode + "-" + className, guild, role)
-                                        .flatMap(category -> Mono.when(
-                                                createChannelInCategory(ChannelType.TEXT, classCode + "-" + className, guild, category, role),
-                                                createChannelInCategory(ChannelType.VOICE, classCode + "-" + className, guild, category, role)
-                                        ))
-                                        .thenReturn(discordId);
+                                return createCategoryWithRole(className, guild, role)
+                                        .flatMap(category ->
+                                                createChannelsInCategory(className, guild, category, role)
+                                                        .map(inviteUrl -> new DiscordOperationResult(discordId, inviteUrl))
+                                        );
                             });
                 });
     }
@@ -255,14 +266,12 @@ public class DiscordBotService {
                 .map(__ -> false) // Se encontrou algum membro, não está vazia
                 .defaultIfEmpty(true); // Se não encontrou, está vazia
     }
+    
     private Mono<Void> deleteAllResources(Guild guild, String resourceName) {
-        String voiceChannelName = resourceName;
-        String textChannelName = resourceName.replace(" ", "-").toLowerCase();
-        String categoryName = resourceName;
 
         return guild.getChannels()
                 .ofType(VoiceChannel.class)
-                .filter(voiceChannel -> voiceChannel.getName().equals(voiceChannelName))
+                .filter(voiceChannel -> voiceChannel.getName().equalsIgnoreCase(resourceName))
                 .next()
                 .flatMap(voiceChannel ->
                         // Primeiro deleta todos os invites do canal de voz
@@ -277,7 +286,7 @@ public class DiscordBotService {
                 .then(Mono.defer(() ->
                         guild.getChannels()
                                 .ofType(TextChannel.class)
-                                .filter(textChannel -> textChannel.getName().equals(textChannelName))
+                                .filter(textChannel -> textChannel.getName().equalsIgnoreCase(resourceName))
                                 .next()
                                 .flatMap(textChannel -> textChannel.delete())
                 ))
@@ -286,7 +295,7 @@ public class DiscordBotService {
                 .then(Mono.defer(() ->
                         guild.getChannels()
                                 .ofType(Category.class)
-                                .filter(category -> category.getName().equals(categoryName))
+                                .filter(category -> category.getName().equalsIgnoreCase(resourceName))
                                 .next()
                                 .flatMap(category -> category.delete())
                 ))
