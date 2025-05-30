@@ -1,0 +1,57 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-id: ${DISCORD_CLIENT_ID}
+            client-secret: ${DISCORD_CLIENT_SECRET}
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            scope:
+              - identify
+            redirect-uri: ${DISCORD_REDIRECT_URI}
+            clientName: FourScouts client
+        provider:
+          discord:
+            authorizationUri: ${DISCORD_AUTHORIZATION_URI}
+            tokenUri: ${DISCORD_TOKEN_URI}
+            userInfoUri: ${DISCORD_USER_INFO_URI}
+            user-info-uri: username
+  datasource:
+    username: ${PROD_DB_USERNAME}
+    password: ${PROD_DB_PASSWORD}
+    url: jdbc:postgresql://${PROD_DB_HOST}:${PROD_DB_PORT}/${PROD_DB_NAME}
+    name: bora-estudar
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAILSERVICE_USERNAME}
+    password: ${EMAILSERVICE_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+    show-sql: true
+  sql:
+    init:
+      data-locations: classpath:/data.sql
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-time: 1440
+    jwtCookieName: 'access_token'
+  email:
+    token:
+      expiration-time-minutes: 60
+discord:
+  token: ${DISCORD_TOKEN}
+  guildId: ${DISCORD_GUILD_ID}
