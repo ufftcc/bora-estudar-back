@@ -14,7 +14,8 @@ spring:
             clientName: FourScouts client
         provider:
           discord:
-            authorizationUri: ${DISCORD_AUTHORIZATION_URI}
+            authorizationUri: |-
+              ${DISCORD_AUTHORIZATION_URI}
             tokenUri: ${DISCORD_TOKEN_URI}
             userInfoUri: ${DISCORD_USER_INFO_URI}
             user-info-uri: username
