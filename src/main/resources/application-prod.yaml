@@ -14,8 +14,7 @@ spring:
             clientName: FourScouts client
         provider:
           discord:
-            authorizationUri: |-
-              ${DISCORD_AUTHORIZATION_URI}
+            authorizationUri: ${DISCORD_AUTHORIZATION_URI}
             tokenUri: ${DISCORD_TOKEN_URI}
             userInfoUri: ${DISCORD_USER_INFO_URI}
             user-info-uri: username
@@ -23,7 +22,7 @@ spring:
     username: ${PROD_DB_USERNAME}
     password: ${PROD_DB_PASSWORD}
     url: jdbc:postgresql://${PROD_DB_HOST}:${PROD_DB_PORT}/${PROD_DB_NAME}
-    name: bora-estudar
+    name: ${PROD_DB_NAME}
   mail:
     host: smtp.gmail.com
     port: 587
