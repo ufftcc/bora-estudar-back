@@ -43,9 +43,9 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
-  sql:
-    init:
-      data-locations: classpath:/data.sql
+  # sql:
+  #   init:
+  #     data-locations: classpath:/data.sql
 security:
   jwt:
     secret: ${JWT_SECRET}
