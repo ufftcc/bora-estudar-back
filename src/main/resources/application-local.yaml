@@ -4,8 +4,8 @@ spring:
       client:
         registration:
           discord:
-            client-id: 1237632955145257021
-            client-secret: iV3vyZyUdz-7g-syVbFFqRCz5o3m3-O_
+            client-id: ${DISCORD_CLIENT_ID}
+            client-secret: ${DISCORD_CLIENT_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
             scope:
@@ -18,26 +18,32 @@ spring:
             tokenUri: https://discordapp.com/api/oauth2/token
             userInfoUri: https://discord.com/api/users/@me
             user-info-uri: username
+
   datasource:
+    name: boraestudar
     username: sa
     password: ''
     url: jdbc:h2:mem:testdb
+    # url: jdbc:h2:~/data/testdb
     driverClassName: org.h2.Driver
   h2:
-    console:
-      enabled: true
-      path: '/h2'
+  console:
+    enabled: true
+    path: '/h2'
+    port: 9092
+
   mail:
     host: smtp.gmail.com
     port: 587
-    username: bora-estudar-app@gmail.com
-    password: 'gzwq oiue ykyf xemm'
+    username: ${EMAILSERVICE_USERNAME}
+    password: ${EMAILSERVICE_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
@@ -50,14 +56,27 @@ spring:
   sql:
     init:
       data-locations: classpath:/data.sql
+
 security:
   jwt:
-    secret: '======================Tcc=BoraEstudar==========================='
+    secret: ${JWT_SECRET}
     expiration-time: 1440
     jwtCookieName: 'access_token'
   email:
     token:
       expiration-time-minutes: 60
+
 discord:
-  token: MTIzNzYzMjk1NTE0NTI1NzAyMQ.G1F77C.1sr96uENcZgnptTyYbPPxJWUX5kVZNRcWh7np0
+  token: ${DISCORD_TOKEN}
   guildId: 1237585539314487476
+
+external:
+  host: http://localhost:8080
+
+# logging:
+#   level:
+#     org:
+#       springframework: DEBUG
+#         # security: DEBUG
+#     com:
+#       ufftcc: DEBUG
