@@ -25,6 +25,9 @@ public class AuthService {
     private final EmailService emailService;
     private final EmailVerificationTokenService emailTokenService;
 
+    @Value("${external.host}")
+    private String host;
+
     public AuthService(UserRepository userRepository, AuthenticationManager authenticationManager,
                        UserMapper userMapper, PasswordEncoder passwordEncoder, EmailService emailService,
                        EmailVerificationTokenService emailTokenService) {
@@ -56,10 +59,10 @@ public class AuthService {
         User registredUser = userRepository.save(user);
         String emailToken = emailTokenService.createVerificationToken(registredUser).getToken();
         // Descomentar para o email ser enviado de verdade
-//        emailService.sendEmail(registredUser.getEmail(), "Confirm your email",
-//                "Click on this link to confirm your email: http://localhost:4200/confirm?token=" + emailToken);
+       emailService.sendEmail(registredUser.getEmail(), "Confirm your email",
+               "Click on this link to confirm your email: "+host+"/confirm?token=" + emailToken);
 
-        System.out.println("Click on this link to confirm your email: http://localhost:4200/confirm?token=" + emailToken);
+        // System.out.println("Click on this link to confirm your email: http://localhost:4200/confirm?token=" + emailToken);
 
         return registredUser;
     }
