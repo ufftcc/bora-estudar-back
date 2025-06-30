@@ -58,6 +58,7 @@ CREATE TABLE study_group (
         stgr_ds_modality IN ('PRESENTIAL', 'REMOTE', 'HYBRID')
     ),
     stgr_ds_title VARCHAR(255) NOT NULL,
+    stgr_invite_discord varchar(255),
     PRIMARY KEY (stgr_sq_study_group)
 );
 
