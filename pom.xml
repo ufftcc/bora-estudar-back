@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.ufftcc</groupId>
     <artifactId>bora-estudar</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>bora-estudar-back</name>
     <description>bora-estudar-back</description>
     <properties>

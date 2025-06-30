@@ -60,16 +60,18 @@ public class SecurityConfig {
 
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
-                auth.requestMatchers("/confirm","/signin", "/signup", "/signout").permitAll()
+                auth.requestMatchers("/*.html", "/*.css", "/*.js", "/*.png", "/*.jpg", "/*.ico").permitAll()
+                    .requestMatchers("/confirm","/signin", "/signup", "/signout").permitAll()
                     .requestMatchers("/h2/**").permitAll()
+                    .requestMatchers("/discord/**").permitAll()
+                    .requestMatchers("/error").permitAll()
                     .anyRequest().authenticated()
-            );
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
-            
-        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
