@@ -11,27 +11,27 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BotConfiguration {
 
-    @Value("${discord.token}")
-    private String TOKEN;
-
-    @Bean
-    public GatewayDiscordClient gatewayDiscordClient() {
-
-        GatewayDiscordClient gateway = DiscordClientBuilder.create(TOKEN)
-                .build()
-                .gateway()
-                .setEnabledIntents(IntentSet.all())
-                .login()
-                .block();
-
-        gateway.on(MessageCreateEvent.class).subscribe(event -> {
-            if (event.getMessage().getContent().equalsIgnoreCase("!ping")) {
-                event.getMessage().getChannel().block()
-                        .createMessage("Pong!").block();
-            }
-        });
-
-        return gateway;
-    }
+//    @Value("${discord.token}")
+//    private String TOKEN;
+//
+//    @Bean
+//    public GatewayDiscordClient gatewayDiscordClient() {
+//
+//        GatewayDiscordClient gateway = DiscordClientBuilder.create(TOKEN)
+//                .build()
+//                .gateway()
+//                .setEnabledIntents(IntentSet.all())
+//                .login()
+//                .block();
+//
+//        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+//            if (event.getMessage().getContent().equalsIgnoreCase("!ping")) {
+//                event.getMessage().getChannel().block()
+//                        .createMessage("Pong!").block();
+//            }
+//        });
+//
+//        return gateway;
+//    }
 
 }
