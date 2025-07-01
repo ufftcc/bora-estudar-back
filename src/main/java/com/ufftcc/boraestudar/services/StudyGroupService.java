@@ -10,7 +10,11 @@ import com.ufftcc.boraestudar.exceptions.studygroup.NoStudentsSlotsAvailableExce
 import com.ufftcc.boraestudar.exceptions.studygroup.StudyGroupNotFoundException;
 import com.ufftcc.boraestudar.repositories.StudyGroupRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +27,7 @@ public class StudyGroupService {
     private final StudyGroupUserService studyGroupUserService;
     private final StudyGroupRepository repository;
     private final StudyGroupMapper mapper;
+    private static final Logger log = LoggerFactory.getLogger(DiscordBotService.class);
 
     public StudyGroupService(UserService userService, StudyGroupUserService studyGroupUserService,
                              StudyGroupRepository repository, StudyGroupMapper mapper) {
@@ -137,6 +142,8 @@ public class StudyGroupService {
         User user = userService.findById(studentId);
         studyGroupUserService.registerUserToGroup(studyGroup, user);
     }
+
+
 
     @Transactional
     public void removeStudentFromGroup(Long studyGroupId, Long studentId) {

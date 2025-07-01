@@ -10,13 +10,16 @@ import com.ufftcc.boraestudar.entities.StudyGroup;
 import com.ufftcc.boraestudar.services.DiscordBotService;
 import com.ufftcc.boraestudar.services.StudyGroupService;
 import com.ufftcc.boraestudar.services.UserService;
+import com.ufftcc.boraestudar.services.DiscordOperationResult;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +62,47 @@ public class StudyGroupController {
 
         return mapper.toTransferObject(createdStudyGroup, StudyGroupResponseDto.class);
     }
+
+ /*   @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<StudyGroupResponseDto> save(@Valid @RequestBody StudyGroupCreateDto dto) {
+        return Mono.fromCallable(() -> studyGroupService.create(dto))
+                .flatMap(createdStudyGroup -> {
+                    return discordBotService.createStudyGroupServer(createdStudyGroup, dto)
+                            .flatMap(discordResult -> {
+                                createdStudyGroup.setDiscordId(discordResult.getRoleId());
+                                createdStudyGroup.setDiscordInviteUrl(discordResult.getInviteUrl());
+
+                                return Mono.fromCallable(() -> studyGroupService.updateByIdOnGroupCreation(createdStudyGroup))
+                                        .flatMap(updatedGroup -> {
+                                            Long userDiscordId = userService.findById(dto.getOwnerId()).getDiscordId();
+
+                                            return Mono.fromRunnable(() ->
+                                                            discordBotService.registerUserToRole(userDiscordId, discordResult.getRoleId())
+                                                    )
+                                                    .subscribeOn(Schedulers.boundedElastic())
+                                                    .onErrorResume(e -> {
+                                                        log.error("Falha ao registrar usuário no Discord (não crítico): {}", e.getMessage());
+                                                        return Mono.empty(); // Continua mesmo com falha no Discord
+                                                    })
+                                                    .thenReturn(updatedGroup);
+                                        });
+                            })
+                            .map(updatedGroup -> mapper.toTransferObject(updatedGroup, StudyGroupResponseDto.class));
+                })
+                .doOnSuccess(response -> log.info("Grupo criado com sucesso: {}", response))
+                .doOnError(e -> log.error("Erro crítico ao criar grupo", e))
+                .onErrorResume(e -> {
+                    if (e instanceof ResponseStatusException) {
+                        return Mono.error(e);
+                    }
+
+                    // Erros genéricos
+                    return Mono.error(new ResponseStatusException(
+                            HttpStatus.INTERNAL_SERVER_ERROR,
+                            "Erro ao criar grupo de estudo: " + e.getMessage(), e));
+                });
+    }*/
 
     @PostMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
