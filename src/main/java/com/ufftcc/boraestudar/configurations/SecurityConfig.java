@@ -63,6 +63,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers("/*.html", "/*.css", "/*.js", "/*.png", "/*.jpg", "/*.ico").permitAll()
                     .requestMatchers("/confirm","/signin", "/signup", "/signout").permitAll()
+                    .requestMatchers("/static/**").permitAll()
                     .requestMatchers("/h2/**").permitAll()
                     .requestMatchers("/discord/**").permitAll()
                     .requestMatchers("/error").permitAll()
