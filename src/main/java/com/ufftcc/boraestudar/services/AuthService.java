@@ -62,8 +62,9 @@ public class AuthService {
         User registredUser = userRepository.save(user);
         String emailToken = emailTokenService.createVerificationToken(registredUser).getToken();
         // Descomentar para o email ser enviado de verdade
-       emailService.sendEmail(registredUser.getEmail(), "Confirm your email",
-               "Click on this link to confirm your email: "+host+"/confirm?token=" + emailToken);
+       emailService.sendEmail(registredUser.getEmail(), 
+               "Confirmação de criação de conta",
+               "Clique nesse link para confirmar seu e-mail: "+host+"/confirm?token=" + emailToken);
 
         // System.out.println("Click on this link to confirm your email: http://localhost:4200/confirm?token=" + emailToken);
 
@@ -81,6 +82,6 @@ public class AuthService {
         User user = verificationToken.getUser();
         user.setIsEnabled(true);
         userRepository.save(user);
-        return "Email confirmed successfully";
+        return "E-mail confirmado com sucesso! Faça login para acessar sua conta: " + host + "/login";
     }
 }

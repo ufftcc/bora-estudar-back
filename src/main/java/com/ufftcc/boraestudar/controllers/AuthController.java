@@ -42,8 +42,7 @@ public class AuthController {
     @GetMapping("/confirm")
     @ResponseStatus(HttpStatus.OK)
     public String confirmAccount(@RequestParam String token) {
-        JsonMessage message = new JsonMessage(authService.confirmUser(token));
-        return message.toString();
+        return authService.confirmUser(token);
     }
 
     @PostMapping("/signin")
