@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,6 +109,7 @@ public class StudyGroupController {
     @ResponseStatus(HttpStatus.OK)
     public List<StudyGroupResponseDto> findAll(@RequestBody Optional<StudyGroupFilterDto> dto) {
         List<StudyGroup> studyGroups = studyGroupService.findAll(dto);
+        studyGroups.sort(Comparator.comparing(StudyGroup::getTitle));
         return mapper.toTransferObjectList(studyGroups, StudyGroupResponseDto.class);
     }
 
