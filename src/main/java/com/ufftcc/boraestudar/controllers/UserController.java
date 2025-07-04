@@ -5,6 +5,7 @@ import com.ufftcc.boraestudar.dtos.user.UserResponseBasicDto;
 import com.ufftcc.boraestudar.dtos.user.UserUpdateDto;
 import com.ufftcc.boraestudar.entities.User;
 import com.ufftcc.boraestudar.services.UserService;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,9 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserResponseBasicDto findById(@PathVariable Long id) {
         User user = service.findById(id);
-        return mapper.toTransferObject(user, UserResponseBasicDto.class);
+        UserResponseBasicDto urbd =  mapper.toTransferObject(user, UserResponseBasicDto.class);
+        urbd.setIsDiscordAssociate(StringUtils.isNotBlank(urbd.getDiscordId()));
+        return urbd;
     }
 
     @PutMapping("/{id}")

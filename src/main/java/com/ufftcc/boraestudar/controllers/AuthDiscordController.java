@@ -26,8 +26,10 @@ public class AuthDiscordController {
                                       @RequestParam String code,
                                       @RequestParam String state) {
 
+        String responseBody = authDiscordService.getDiscordUser(code,state);
+
         try {
-            response.sendRedirect(hostHomePage);
+            response.sendRedirect(hostHomePage+"search?updated=true");
         } catch (Exception e) {
             throw new RuntimeException("Redirect failed", e);
         }
