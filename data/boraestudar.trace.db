@@ -1,0 +1,28 @@
+2025-07-05 17:37:18.017302-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT b.*, a.*\000d\000aFROM STUDY_GROUP a\000d\000ainner\000d\000ajoin subject b on a.SUBJ_SQ_SUBJECT  = b.SUBJ_SQ_SUBJECT \000d\000aorder by b.subj_ds_name [*]COLLATE pt_BR"; SQL statement:
+SELECT b.*, a.*
+FROM STUDY_GROUP a
+inner
+join subject b on a.SUBJ_SQ_SUBJECT  = b.SUBJ_SQ_SUBJECT 
+order by b.subj_ds_name COLLATE pt_BR [42000-224]
+2025-07-05 17:38:18.008468-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT b.*, a.*\000d\000aFROM STUDY_GROUP a\000d\000aINNER JOIN SUBJECT b ON a.SUBJ_SQ_SUBJECT = b.SUBJ_SQ_SUBJECT\000d\000aORDER BY b.SUBJ_DS_NAME [*]COLLATE pt_BR"; SQL statement:
+SELECT b.*, a.*
+FROM STUDY_GROUP a
+INNER JOIN SUBJECT b ON a.SUBJ_SQ_SUBJECT = b.SUBJ_SQ_SUBJECT
+ORDER BY b.SUBJ_DS_NAME COLLATE pt_BR [42000-224]
+2025-07-05 17:48:27.758074-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]STUDY_GROUP"; expected "SAVEPOINT, SCRIPT, SHUTDOWN"; SQL statement:
+STUDY_GROUP [42001-224]
+2025-07-05 17:52:39.675836-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]APPLICATION_USER"; expected "ALTER, ANALYZE"; SQL statement:
+APPLICATION_USER [42001-224]
+2025-07-05 18:55:40.513455-03:00 jdbc[26]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]STUDY_GROUP_USER"; expected "SAVEPOINT, SCRIPT, SHUTDOWN"; SQL statement:
+STUDY_GROUP_USER [42001-224]
+2025-07-05 18:55:53.992594-03:00 jdbc[26]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]EMAIL_VERIFICATION_TOKEN"; expected "EXPLAIN, EXECUTE"; SQL statement:
+EMAIL_VERIFICATION_TOKEN [42001-224]
+2025-07-05 19:34:29.170923-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]APPLICATION_USER"; expected "ALTER, ANALYZE"; SQL statement:
+APPLICATION_USER [42001-224]
