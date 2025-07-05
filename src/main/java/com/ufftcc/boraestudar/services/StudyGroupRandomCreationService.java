@@ -68,8 +68,8 @@ public class StudyGroupRandomCreationService {
         createStudyGroup.setSubject(subjectDto);
 
         // Título e descrição aleatórios
-        createStudyGroup.setTitle("Grupo de estudo sobre " + subject.getName() + " #" + random.nextInt(1000));
-        createStudyGroup.setDescription("Descrição aleatória gerada para o grupo de estudo.");
+        createStudyGroup.setTitle(subject.getCode() + " " + subject.getName());
+        createStudyGroup.setDescription("Descrição aleatória gerada para o grupo de estudo! " + subject.getName() + " #" + random.nextInt(1000));
 
         createStudyGroup.setMaxStudents(2 + random.nextInt(5)); // 2 + [0..4] = 2 a 6
 

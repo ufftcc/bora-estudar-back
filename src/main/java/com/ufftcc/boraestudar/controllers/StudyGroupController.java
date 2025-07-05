@@ -112,11 +112,29 @@ public class StudyGroupController {
                 });
     }*/
 
+//    @PostMapping("/filter")
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<StudyGroupResponseDto> findAll(@RequestBody Optional<StudyGroupFilterDto> dto) {
+//        List<StudyGroup> studyGroups = studyGroupService.findAll(dto);
+//        studyGroups.sort(Comparator.comparing(StudyGroup::getTitle));
+//        return mapper.toTransferObjectList(studyGroups, StudyGroupResponseDto.class);
+//    }
+
     @PostMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
     public List<StudyGroupResponseDto> findAll(@RequestBody Optional<StudyGroupFilterDto> dto) {
         List<StudyGroup> studyGroups = studyGroupService.findAll(dto);
-        studyGroups.sort(Comparator.comparing(StudyGroup::getTitle));
+        studyGroups.sort(Comparator.comparing(sg -> {
+            String title = sg.getSubject().getName();
+            if (title == null) {
+                return "";
+            }
+            // Remove accents and non-ASCII characters, then lowercase
+            String normalized = java.text.Normalizer.normalize(title, java.text.Normalizer.Form.NFD);
+            String withoutAccents = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+            String asciiOnly = withoutAccents.replaceAll("[^\\p{ASCII}]", "");
+            return asciiOnly.toLowerCase();
+        }));
         return mapper.toTransferObjectList(studyGroups, StudyGroupResponseDto.class);
     }
 

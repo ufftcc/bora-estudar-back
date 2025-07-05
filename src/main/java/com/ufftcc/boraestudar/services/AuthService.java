@@ -83,7 +83,7 @@ public class AuthService {
         User user = verificationToken.getUser();
         user.setIsEnabled(true);
         userRepository.save(user);
-        return "E-mail confirmado com sucesso! Faça login para acessar sua conta: " + host + "/login";
+        return "E-mail confirmado com sucesso! Faça login para acessar sua conta: ";
     }
 
     private void validateEmail(String email) {
