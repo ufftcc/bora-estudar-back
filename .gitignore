@@ -35,3 +35,7 @@ build/
 
 ### Random ###
 Dockerfile.backend-dev
+
+### Environment Variables ###
+.config.yaml
+.config.local.yaml

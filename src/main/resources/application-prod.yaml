@@ -1,57 +1,71 @@
 spring:
+  config:
+    import: file:./config.local.yaml
   security:
     oauth2:
       client:
         registration:
           discord:
-            client-id: ${DISCORD_CLIENT_ID}
-            client-secret: ${DISCORD_CLIENT_SECRET}
+            client-id: ${discord.client_id}
+            client-secret: ${discord.client_secret}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
             scope:
               - identify
-            redirect-uri: ${DISCORD_REDIRECT_URI}
+            redirect-uri: ${discord.redirect_uri}
+            #redirect-uri: "http://localhost:4200/associate/callback"
             clientName: FourScouts client
         provider:
           discord:
-            authorizationUri: ${DISCORD_AUTHORIZATION_URI}
-            tokenUri: ${DISCORD_TOKEN_URI}
-            userInfoUri: ${DISCORD_USER_INFO_URI}
+            authorizationUri: https://discord.com/oauth2/authorize?client_id=${discord.client_id}&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fdiscord%2Fusers&scope=identify&state=${idUsuario}
+            tokenUri: https://discordapp.com/api/oauth2/token
+            userInfoUri: https://discord.com/api/users/@me
             user-info-uri: username
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${EMAILSERVICE_USERNAME}
-    password: ${EMAILSERVICE_PASSWORD}
+    host: ${mail.host}
+    port: ${mail.port}
+    username: ${mail.username}
+    password: ${mail.password}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+  datasource:
+    username: ${database.username}
+    password: ${database.password}
+    #    url: jdbc:h2:mem:testdb
+    url: ${DB_URL}
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: ${H2_CONSOLE_ENABLED}
+      path: ${H2_CONSOLE_PATH}
   jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
         format_sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
-    # show-sql: true
     hibernate:
       ddl-auto: create-drop
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:/data.sql
+    show-sql: true
+    sql:
+      init:
+        mode: always
+        data-locations: classpath:/data.sql
 security:
   jwt:
-    secret: ${JWT_SECRET}
-    expiration-time: 1440
-    jwtCookieName: 'access_token'
+    secret: ${jwt.secret}
+    expiration-time: ${jwt.expiration_time}
+    jwtCookieName: ${jwt.cookie_name}
   email:
     token:
-      expiration-time-minutes: 60
+      expiration-time-minutes: ${email_token.expiration_time_minutes}
 discord:
-  token: ${DISCORD_TOKEN}
-  guildId: ${DISCORD_GUILD_ID}
+  token: ${discord.token}
+  guildId: ${discord.guild_id}
 external:
-  host: ${EXTERNAL_HOST}
+  host: ${external.host}
+# host: http://localhost:4200/
