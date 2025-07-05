@@ -2,6 +2,7 @@ package com.ufftcc.boraestudar.repositories;
 
 import com.ufftcc.boraestudar.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -10,4 +11,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
+
+    @Query(value = "SELECT * FROM APPLICATION_USER ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
+    User findRandomUser();
+
 }

@@ -7,10 +7,7 @@ import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupResponseDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupFilterDto;
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupUpdateDto;
 import com.ufftcc.boraestudar.entities.StudyGroup;
-import com.ufftcc.boraestudar.services.DiscordBotService;
-import com.ufftcc.boraestudar.services.StudyGroupService;
-import com.ufftcc.boraestudar.services.UserService;
-import com.ufftcc.boraestudar.services.DiscordOperationResult;
+import com.ufftcc.boraestudar.services.*;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +30,23 @@ public class StudyGroupController {
     private final StudyGroupMapper mapper;
     private final DiscordBotService discordBotService;
     private final UserService userService;
+    private final StudyGroupRandomCreationService randomCreationService;
     private static final Logger log = LoggerFactory.getLogger(DiscordBotService.class);
 
-    public StudyGroupController(StudyGroupService service, StudyGroupMapper mapper, DiscordBotService discordBotService, UserService userService) {
+
+    public StudyGroupController(StudyGroupService service, StudyGroupMapper mapper, DiscordBotService discordBotService, UserService userService, StudyGroupRandomCreationService randomCreationService) {
         this.studyGroupService = service;
         this.mapper = mapper;
         this.discordBotService = discordBotService;
         this.userService = userService;
+        this.randomCreationService = randomCreationService;
+    }
+
+    @PostMapping("/criar-aleatorio")
+    @ResponseStatus(HttpStatus.CREATED)
+    public StudyGroupResponseDto criarGrupoAleatorio() {
+        StudyGroupCreateDto dtoAleatorio = randomCreationService.montarDtoAleatorio();
+        return save(dtoAleatorio);
     }
 
     @PostMapping
