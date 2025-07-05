@@ -51,10 +51,7 @@ public class AuthController {
         User authenticatedUser = authService.authenticate(dto);
         ResponseCookie jwtCookie = jwtService.generateJwtHttpOnlyCookie(authenticatedUser.getEmail());
         response.addHeader("Set-Cookie", jwtCookie.toString());
-        //todo verificar como modificar atributo do mapper
-        UserResponseBasicDto urbd = mapper.toTransferObject(authenticatedUser, UserResponseBasicDto.class);
-        urbd.setIsDiscordAssociate(StringUtils.isNotBlank(urbd.getDiscordId()));
-        return urbd;
+        return mapper.toTransferObject(authenticatedUser, UserResponseBasicDto.class);
     }
 
     @PostMapping("/signout")

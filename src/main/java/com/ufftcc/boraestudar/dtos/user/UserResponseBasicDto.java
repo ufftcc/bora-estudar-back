@@ -1,6 +1,8 @@
 package com.ufftcc.boraestudar.dtos.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micrometer.common.util.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserResponseBasicDto {
@@ -12,8 +14,6 @@ public class UserResponseBasicDto {
     private String email;
 
     private String discordId;
-
-    private boolean isDiscordAssociate;
 
     public Long getId() {
         return id;
@@ -47,11 +47,9 @@ public class UserResponseBasicDto {
         this.discordId = discordId;
     }
 
-    public void setIsDiscordAssociate(boolean isDiscordAssociate) {
-        this.isDiscordAssociate = isDiscordAssociate;
-    }
-
+    @JsonProperty
     public boolean getIsDiscordAssociate() {
-        return isDiscordAssociate;
+
+        return StringUtils.isNotBlank(getDiscordId());
     }
 }

@@ -34,9 +34,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserResponseBasicDto findById(@PathVariable Long id) {
         User user = service.findById(id);
-        UserResponseBasicDto urbd =  mapper.toTransferObject(user, UserResponseBasicDto.class);
-        urbd.setIsDiscordAssociate(StringUtils.isNotBlank(urbd.getDiscordId()));
-        return urbd;
+        return mapper.toTransferObject(user, UserResponseBasicDto.class);
     }
 
     @PutMapping("/{id}")

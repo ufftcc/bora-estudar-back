@@ -4,13 +4,14 @@ spring:
       client:
         registration:
           discord:
-            client-id: ${DISCORD_CLIENT_ID}
-            client-secret: ${DISCORD_CLIENT_SECRET}
+            client-id: 1237632955145257021
+            client-secret: iV3vyZyUdz-7g-syVbFFqRCz5o3m3-O_
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
             scope:
               - identify
-            redirect-uri: "http://localhost:8080/discord/users"
+            redirect-uri: "https://boraestudar.ngrok.dev/associate/callback"
+            #redirect-uri: "http://localhost:4200/associate/callback"
             clientName: FourScouts client
         provider:
           discord:
@@ -18,32 +19,26 @@ spring:
             tokenUri: https://discordapp.com/api/oauth2/token
             userInfoUri: https://discord.com/api/users/@me
             user-info-uri: username
-
   datasource:
-    name: boraestudar
     username: sa
     password: ''
     url: jdbc:h2:mem:testdb
-    # url: jdbc:h2:~/data/testdb
     driverClassName: org.h2.Driver
   h2:
-  console:
-    enabled: true
-    path: '/h2'
-    port: 9092
-
+    console:
+      enabled: true
+      path: '/h2'
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${EMAILSERVICE_USERNAME}
-    password: ${EMAILSERVICE_PASSWORD}
+    username: bora-estudar-app@gmail.com
+    password: 'gzwq oiue ykyf xemm'
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
@@ -56,23 +51,20 @@ spring:
   sql:
     init:
       data-locations: classpath:/data.sql
-
 security:
   jwt:
-    secret: ${JWT_SECRET}
+    secret: '======================Tcc=BoraEstudar==========================='
     expiration-time: 1440
     jwtCookieName: 'access_token'
   email:
     token:
       expiration-time-minutes: 60
-
 discord:
-  token: ${DISCORD_TOKEN}
+  token: MTIzNzYzMjk1NTE0NTI1NzAyMQ.G1F77C.1sr96uENcZgnptTyYbPPxJWUX5kVZNRcWh7np0
   guildId: 1237585539314487476
-
 external:
-  host: http://localhost:8080
-
+  host: https://boraestudar.ngrok.dev/
+# host: http://localhost:4200/
 # logging:
 #   level:
 #     org:
