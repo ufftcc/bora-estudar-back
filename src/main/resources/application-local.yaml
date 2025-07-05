@@ -51,6 +51,7 @@ spring:
     show-sql: true
   sql:
     init:
+      mode: always
       data-locations: classpath:/data.sql
 security:
   jwt:
