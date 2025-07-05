@@ -56,6 +56,7 @@ public class AuthService {
 
     public User registerUser(UserCreateDto dto) {
         User user = userMapper.toEntity(dto);
+        validateEmail(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setIsEnabled(false);
 
@@ -64,7 +65,7 @@ public class AuthService {
         // Descomentar para o email ser enviado de verdade
        emailService.sendEmail(registredUser.getEmail(), 
                "Confirmação de criação de conta",
-               "Clique nesse link para confirmar seu e-mail: "+host+"/confirm?token=" + emailToken);
+               "Clique nesse link para confirmar seu e-mail: <a href=" + host + "confirm?token=" + emailToken + ">Clique aqui</a>");
 
         // System.out.println("Click on this link to confirm your email: http://localhost:4200/confirm?token=" + emailToken);
 
@@ -83,5 +84,20 @@ public class AuthService {
         user.setIsEnabled(true);
         userRepository.save(user);
         return "E-mail confirmado com sucesso! Faça login para acessar sua conta: " + host + "/login";
+    }
+
+    private void validateEmail(String email) {
+        final String EMAIL_DOMAIN = "@id.uff.br";
+
+        email = email.toLowerCase();
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("Email is required");
+        }
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+        if (!email.endsWith(EMAIL_DOMAIN)) {
+            throw new IllegalArgumentException("Email must be from UFF");
+        }
     }
 }
