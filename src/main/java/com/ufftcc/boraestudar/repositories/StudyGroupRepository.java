@@ -26,7 +26,7 @@ public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long>, J
             "AND (:subjectName is null OR su.name LIKE %:subjectName%) " +
             "AND (:weekdaysId is null OR w.id IN :weekdaysId)" +
             "AND (:modality is null OR sg.modality = :modality) " +
-            "AND (:meetingTime is null OR sg.meetingTime = :meetingTime) " +
+            "AND (:meetingTime is null OR sg.meetingTime >= :meetingTime) " +
             "AND (:studentId is null OR st.user.id = :studentId) ")
     List<StudyGroup> findByAttributesDinamicQuery(String description, String title, String subjectName,
                                                   LocalTime meetingTime, List<Long> weekdaysId, ModalityEnum modality, Long studentId);
