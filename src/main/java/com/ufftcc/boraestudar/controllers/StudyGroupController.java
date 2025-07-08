@@ -179,4 +179,11 @@ public class StudyGroupController {
 //        service.deleteById(id);
 //    }
 
+//    @PostMapping("/invite-guild")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public String criarInviteParaServidor() {
+//        return discordBotService.createInviteGuild();
+//    }
+
+
 }

@@ -2,10 +2,8 @@ package com.ufftcc.boraestudar.services;
 
 import com.ufftcc.boraestudar.dtos.studygroup.StudyGroupCreateDto;
 import com.ufftcc.boraestudar.entities.StudyGroup;
-import reactor.util.function.Tuple2; // Import necessário
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClient;
-import discord4j.core.object.Invite;
 import discord4j.core.object.PermissionOverwrite;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Role;
@@ -13,17 +11,14 @@ import discord4j.core.object.entity.channel.*;
 import discord4j.core.spec.*;
 import discord4j.core.spec.InviteCreateSpec;
 import discord4j.gateway.intent.IntentSet;
-import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -302,6 +297,25 @@ public class DiscordBotService {
                 .then()
                 .doOnSuccess(__ -> log.info("Todos recursos deletados para: {}", resourceName))
                 .doOnError(e -> log.error("Erro ao deletar recursos", e));
+    }
+
+
+    public String createInviteGuild() {
+        return DiscordClient.create(token)
+                .login()
+                .flatMap(gateway -> gateway.getGuildById(Snowflake.of(guildId)))
+                .flatMap(guild -> guild.getChannelById(Snowflake.of("1237585539750826046")))
+                .ofType(TextChannel.class) // Filtra apenas TextChannel (que suporta createInvite)
+                .flatMap(textChannel -> {
+                    InviteCreateSpec inviteSpec = InviteCreateSpec.builder()
+                            .maxAge(0) // Convite permanente
+                            .maxUses(0) // Usos ilimitados
+                            .unique(true)
+                            .build();
+
+                    return textChannel.createInvite(inviteSpec)
+                            .map(invite -> "https://discord.gg/" + invite.getCode());
+                }).block();
     }
 
 }
