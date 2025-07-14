@@ -37,5 +37,5 @@ build/
 Dockerfile.backend-dev
 
 ### Environment Variables ###
-.config.yaml
-.config.local.yaml
+config.yaml
+config.local.yaml
